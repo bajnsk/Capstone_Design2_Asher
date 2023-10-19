@@ -1,131 +1,239 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import '../firebase_options.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+showToast(String msg) {
+  Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0);
+}
+
+class Fluttertoast {
+  static void showToast({required String msg, required Toast toastLength, required ToastGravity gravity, required int timeInSecForIosWeb, required MaterialColor backgroundColor, required Color textColor, required double fontSize}) {}
+}
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zdart pub global activate flutterfire_cliero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: AuthWidget(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+class AuthWidget extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  AuthWidgetState createState() => AuthWidgetState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class AuthWidgetState extends State<AuthWidget> {
+  final _formKey = GlobalKey<FormState>();
 
-  void _incrementCounter() {
+  late String email;
+  late String password;
+  bool isInput = true; //false - result
+  bool isSignIn = true; //false - SingUp
+
+  signIn() async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) {
+        print(value);
+        if (value.user!.emailVerified) {
+          //이메일 인증 여부
+          setState(() {
+            isInput = false;
+          });
+        } else {
+          showToast('emailVerified error');
+        }
+        return value;
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        showToast('user-not-found');
+      } else if (e.code == 'wrong-password') {
+        showToast('wrong-password');
+      } else {
+        print(e.code);
+      }
+    }
+  }
+
+  signOut() async {
+    await FirebaseAuth.instance.signOut();
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      isInput = true;
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+  signUp() async {
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) {
+        if (value.user!.email != null) {
+          FirebaseAuth.instance.currentUser?.sendEmailVerification();
+          setState(() {
+            isInput = false;
+          });
+        }
+        return value;
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        showToast('weak-password');
+      } else if (e.code == 'email-already-in-use') {
+        showToast('email-already-in-use');
+      } else {
+        showToast('other error');
+        print(e.code);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  List<Widget> getInputWidget() {
+    return [
+      Text(
+        isSignIn ? "SignIn" : "SignUp",
+        style: TextStyle(
+          color: Colors.indigo,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
+        textAlign: TextAlign.center,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      Form(
+        key: _formKey,
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          children: [
+            TextFormField(
+              decoration: InputDecoration(labelText: 'email'),
+              validator: (value) {
+                if (value?.isEmpty ?? false) {
+                  return 'Please enter email';
+                }
+                return null;
+              },
+              onSaved: (String? value) {
+                email = value ?? "";
+              },
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'password',
+              ),
+              obscureText: true,
+              validator: (value) {
+                if (value?.isEmpty ?? false) {
+                  return 'Please enter password';
+                }
+                return null;
+              },
+              onSaved: (String? value) {
+                password = value ?? "";
+              },
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState?.validate() ?? false) {
+              _formKey.currentState?.save();
+              print('email: $email, password : $password');
+              if (isSignIn) {
+                signIn();
+              } else {
+                signUp();
+              }
+            }
+          },
+          child: Text(isSignIn ? "SignIn" : "SignUp")),
+      RichText(
+        textAlign: TextAlign.right,
+        text: TextSpan(
+          text: 'Go ',
+          style: Theme.of(context).textTheme.bodyText1,
+          children: <TextSpan>[
+            TextSpan(
+                text: isSignIn ? "SignUp" : "SignIn",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    setState(() {
+                      isSignIn = !isSignIn;
+                    });
+                  }),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> getResultWidget() {
+    String resultEmail = FirebaseAuth.instance.currentUser!.email!;
+    return [
+      Text(
+        isSignIn
+            ? "$resultEmail 로 로그인 하셨습니다.!"
+            : "$resultEmail 로 회원가입 하셨습니다.! 이메일 인증을 거쳐야 로그인이 가능합니다.",
+        style: TextStyle(
+          color: Colors.black54,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      ElevatedButton(
+          onPressed: () {
+            if (isSignIn) {
+              signOut();
+            } else {
+              setState(() {
+                isInput = true;
+                isSignIn = true;
+              });
+            }
+          },
+          child: Text(isSignIn ? "SignOut" : "SignIn")),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Auth Test"),
+      ),
+      body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: isInput ? getInputWidget() : getResultWidget()),
     );
   }
 }
