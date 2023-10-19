@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../firebase_options.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'Firebase_GoogleLogin.dart';
+
+
 
 showToast(String msg) {
   Fluttertoast.showToast(
@@ -48,7 +51,6 @@ class AuthWidget extends StatefulWidget {
 
 class AuthWidgetState extends State<AuthWidget> {
   final _formKey = GlobalKey<FormState>();
-
   late String email;
   late String password;
   bool isInput = true; //false - result
@@ -177,7 +179,10 @@ class AuthWidgetState extends State<AuthWidget> {
         textAlign: TextAlign.right,
         text: TextSpan(
           text: 'Go ',
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme
+              .of(context)
+              .textTheme
+              .bodyText1,
           children: <TextSpan>[
             TextSpan(
                 text: isSignIn ? "SignUp" : "SignIn",
@@ -232,8 +237,29 @@ class AuthWidgetState extends State<AuthWidget> {
         title: Text("Auth Test"),
       ),
       body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: isInput ? getInputWidget() : getResultWidget()),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          if (isInput) ...getInputWidget() else
+            ...getResultWidget(),
+          Expanded(
+            child: Column(
+              //mainAxisAlignment: MainAxisAlignment.end, // 하단 정렬
+              children: <Widget>[
+                TextButton(
+                  child: Text("Google Login"),
+                  onPressed: GoogleLogin.signInWithGoogle,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
+
+
+
+
+
+
