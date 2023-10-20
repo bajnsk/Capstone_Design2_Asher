@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "74535199348",
+    "project_id": "sadfjk-2021c",
+    "storage_bucket": "sadfjk-2021c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74535199348:android:d2ca912db6826cb5f0e721",
+        "android_client_info": {
+          "package_name": "com.android.tools"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcUy3HBSO-_t5-W9naQNpadWi7mwtrz_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
