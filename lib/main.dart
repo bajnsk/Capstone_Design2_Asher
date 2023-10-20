@@ -54,7 +54,7 @@ class AuthWidgetState extends State<AuthWidget> {
   late String email;
   late String password;
   bool isInput = true; //false - result
-  bool isSignIn = true; //false - SingUp
+  bool isSignIn = true; //false - SignUp
 
   signIn() async {
     try {
@@ -119,8 +119,8 @@ class AuthWidgetState extends State<AuthWidget> {
 
   List<Widget> getInputWidget() {
     return [
-      Text(
-        isSignIn ? "SignIn" : "SignUp",
+      /*Text(
+        isSignIn ? "Sign In" : "Sign Up",
         style: TextStyle(
           color: Colors.indigo,
           fontWeight: FontWeight.bold,
@@ -128,12 +128,14 @@ class AuthWidgetState extends State<AuthWidget> {
         ),
         textAlign: TextAlign.center,
       ),
+      */
       Form(
         key: _formKey,
         child: Column(
           children: [
             TextFormField(
               decoration: InputDecoration(labelText: 'email'),
+              keyboardType: TextInputType.emailAddress,
               validator: (value) {
                 if (value?.isEmpty ?? false) {
                   return 'Please enter email';
@@ -160,21 +162,26 @@ class AuthWidgetState extends State<AuthWidget> {
               },
             ),
           ],
+
         ),
       ),
-      ElevatedButton(
-          onPressed: () {
-            if (_formKey.currentState?.validate() ?? false) {
-              _formKey.currentState?.save();
-              print('email: $email, password : $password');
-              if (isSignIn) {
-                signIn();
-              } else {
-                signUp();
+      SizedBox(height: 30,),
+      ButtonTheme(
+      child: ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState?.validate() ?? false) {
+                _formKey.currentState?.save();
+                print('email: $email, password : $password');
+                if (isSignIn) {
+                  signIn();
+                } else {
+                  signUp();
+                }
               }
-            }
-          },
-          child: Text(isSignIn ? "SignIn" : "SignUp")),
+            },
+            child: Text(isSignIn ? "SignIn" : "SignUp")),
+      ),
+      SizedBox(height: 30,),
       RichText(
         textAlign: TextAlign.right,
         text: TextSpan(
@@ -200,6 +207,8 @@ class AuthWidgetState extends State<AuthWidget> {
           ],
         ),
       ),
+      SizedBox(height: 30,)
+
     ];
   }
 
@@ -234,7 +243,16 @@ class AuthWidgetState extends State<AuthWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Auth Test"),
+        title: Text(
+          isSignIn ? "Sign In" : "Sign Up",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
