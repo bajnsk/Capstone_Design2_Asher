@@ -129,58 +129,129 @@ class AuthWidgetState extends State<AuthWidget> {
         textAlign: TextAlign.center,
       ),
       */
-      Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              decoration: InputDecoration(labelText: 'email'),
-              keyboardType: TextInputType.emailAddress,
-              validator: (value) {
-                if (value?.isEmpty ?? false) {
-                  return 'Please enter email';
-                }
-                return null;
-              },
-              onSaved: (String? value) {
-                email = value ?? "";
-              },
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'password',
-              ),
-              obscureText: true,
-              validator: (value) {
-                if (value?.isEmpty ?? false) {
-                  return 'Please enter password';
-                }
-                return null;
-              },
-              onSaved: (String? value) {
-                password = value ?? "";
-              },
-            ),
-          ],
+      Container(
+        margin: EdgeInsets.only(top: 100),
+        child: Container(
+          margin: EdgeInsets.all(50),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.account_circle,
+                        color: Colors.grey,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                          BorderSide(color: Colors.black,),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(35.0),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.black,),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(35.0),
+                        ),
+                      ),
+                      hintText: 'email',
+                      hintStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                      contentPadding:EdgeInsets.all(10)
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value?.isEmpty ?? false) {
+                        return 'Please enter email';
+                      }
+                      return null;
+                    },
+                    onSaved: (String? value) {
+                      email = value ?? "";
+                    },
+                  ),
+                SizedBox(height: 10,),
+                TextFormField(
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.key,
+                        color: Colors.grey,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.black,),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(35.0),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.black,),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(35.0),
+                        ),
+                      ),
+                      hintText: 'password',
+                      hintStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                      contentPadding:EdgeInsets.all(10)
+                  ),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value?.isEmpty ?? false) {
+                      return 'Please enter password';
+                    }
+                    return null;
+                  },
+                  onSaved: (String? value) {
+                    password = value ?? "";
+                  },
+                ),
+                /*
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'password',
+                  ),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value?.isEmpty ?? false) {
+                      return 'Please enter password';
+                    }
+                    return null;
+                  },
+                  onSaved: (String? value) {
+                    password = value ?? "";
+                  },
+                ),
+                 */
+              ],
 
+            ),
+          ),
         ),
       ),
-      SizedBox(height: 30,),
       ButtonTheme(
-      child: ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState?.validate() ?? false) {
-                _formKey.currentState?.save();
-                print('email: $email, password : $password');
-                if (isSignIn) {
-                  signIn();
-                } else {
-                  signUp();
+        child: ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState?.validate() ?? false) {
+                  _formKey.currentState?.save();
+                  print('email: $email, password : $password');
+                  if (isSignIn) {
+                    signIn();
+                  } else {
+                    signUp();
+                  }
                 }
-              }
-            },
-            child: Text(isSignIn ? "SignIn" : "SignUp")),
-      ),
+              },
+              child: Text(isSignIn ? "SignIn" : "SignUp")),
+        ),
       SizedBox(height: 30,),
       RichText(
         textAlign: TextAlign.right,
