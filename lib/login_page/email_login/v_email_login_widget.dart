@@ -3,6 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../google_login/c_google_login_process.dart';
+
 // 이메일 로그인 구현 컨트롤러와 위젯
 // getResult 위젯을 mainpagewidget 객체로 교환
 
@@ -150,6 +152,20 @@ class AuthWidgetState extends State<AuthWidget>{
             }
           },
           child: Text(isSignIn ? "SignIn" : "SignUp")),
+      ElevatedButton(
+        onPressed: () async {
+          UserCredential? userCredential = await signInWithGoogle();
+          final user = userCredential?.user;
+          if (user != null) {
+            // 로그인 성공, 사용자 정보(userCredential.user)를 사용할 수 있습니다.
+            print('Google 로그인 성공: ${user.displayName}');
+            // 여기에서 추가 작업 수행 가능
+          } else {
+            print('Google 로그인 실패 또는 취소');
+          }
+        },
+        child: Text('Google 로그인'),
+      ),
       RichText(
         textAlign: TextAlign.right,
         text: TextSpan(
@@ -175,8 +191,8 @@ class AuthWidgetState extends State<AuthWidget>{
     ];
   }
 
-  // 로그인 성공 시 화면
-  List<Widget> getResultWidget() {
+  // 로그인 성공 시 화면 MainPageWidget
+  List<Widget> MainPageWidget() {
     String resultEmail = FirebaseAuth.instance.currentUser!.email!;
     return [
       Text(
@@ -211,7 +227,8 @@ class AuthWidgetState extends State<AuthWidget>{
       ),
       body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: isInput ? getInputWidget() : getResultWidget()),
+          children: isInput ? getInputWidget() : MainPageWidget()
+      ),
     );
   }
 }
