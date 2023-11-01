@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class appbar extends StatefulWidget {
-  const appbar({super.key});
+class Appbar extends StatefulWidget {
+  const Appbar({super.key});
 
   @override
-  State<appbar> createState() => _appbarState();
+  State<Appbar> createState() => _AppbarState();
 }
 
-class _appbarState extends State<appbar> {
+class _AppbarState extends State<Appbar> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override

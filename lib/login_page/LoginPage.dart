@@ -1,3 +1,4 @@
+import 'package:capstone/MyPage/my_page.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/login_page/email_login/Test/widget/my_button.dart';
 import 'package:capstone/login_page/email_login/Test/widget/my_textfield.dart';
@@ -6,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:capstone/login_page/email_login/Test/controller/auth_controller.dart';
 import 'package:capstone/MainPage/main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../MyPage/my_page.dart';
 
 class LoginPage extends StatelessWidget {
   final emailController = TextEditingController();
@@ -14,7 +16,7 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   void _navigateToHome(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuWidget()));
   }
 
   @override
