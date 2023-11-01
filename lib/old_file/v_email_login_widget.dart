@@ -2,8 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import '../google_login/c_google_login_process.dart';
+import '../login_page/google_login/c_google_login_process.dart';
 
 // 이메일 로그인 구현 컨트롤러와 위젯
 // getResult 위젯을 mainpagewidget 객체로 교환
@@ -17,7 +16,7 @@ showToast(String msg) {
       backgroundColor: Colors.red,
       textColor: Colors.white,
       fontSize: 16.0);
-}
+} 
 
 class AuthWidget extends StatefulWidget {
   @override
