@@ -14,7 +14,7 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   void _navigateToHome(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => home()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
   }
 
   @override

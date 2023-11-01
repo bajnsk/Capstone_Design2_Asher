@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class AuthController{
   void navigateToHome(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => home()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
   }
 }
 

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class home extends StatelessWidget {
-  const home({super.key});
-
+class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,12 +10,23 @@ class home extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
+          children: <Widget>[
             Text(
-              'Welcome to the Main Page!',
+              'Main Page',
               style: TextStyle(fontSize: 24),
             ),
-            // 추가 내용을 여기에 구현
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/tag');
+              },
+              child: Text('Go to Tag Page'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/my');
+              },
+              child: Text('Go to My Page'),
+            ),
           ],
         ),
       ),
