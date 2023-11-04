@@ -14,9 +14,20 @@ class MyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    IconData prefixIcon;
+    if (hintText == 'Email') {
+      prefixIcon = Icons.email;
+    } else if (hintText == 'Password') {
+      prefixIcon = Icons.lock;
+    } else {
+      prefixIcon = Icons.info;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
+        keyboardType: TextInputType.emailAddress,
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
@@ -28,8 +39,10 @@ class MyTextField extends StatelessWidget {
             ),
             fillColor: Colors.grey.shade200,
             filled: true,
+            prefixIcon: Icon(prefixIcon),
             hintText: hintText,
-            hintStyle: TextStyle(color: Colors.grey[500])),
+            hintStyle: TextStyle(color: Colors.grey[500])
+        ),
       ),
     );
   }

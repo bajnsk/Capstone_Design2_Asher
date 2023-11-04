@@ -19,6 +19,7 @@ Future<User?> signInWithEmailAndPassword(
       password: password,
     );
     User? user = userCredential.user;
+    print(user);
     return user;
   } catch (e) {
     // 로그인 실패 처리
