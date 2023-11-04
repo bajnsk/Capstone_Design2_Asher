@@ -10,7 +10,7 @@ Future<UserCredential?> signInWithGoogle() async {
   try {
     // Google 로그인 시작
     final GoogleSignInAccount? googleUser = await GoogleSignIn(
-      clientId: '871697957388-ujfam08p06kaec6nfcojrt2av28al2q2.apps.googleusercontent.com',
+      clientId: '899195973843-f530dmrhbmvtqtt2daeqe9pv6slkprfa.apps.googleusercontent.com',
     ).signIn();
 
     // 사용자가 Google 로그인을 취소한 경우 처리

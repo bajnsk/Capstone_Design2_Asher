@@ -88,9 +88,9 @@ class TestLoginPage2 extends StatelessWidget {
 
                   // sign in button
                   MyButton(
-                    onTap: () {
+                    onPressed: () {
                       // signInWithEmailAndPassword(emailController.text, passwordController.text, );
-                    }
+                    }, buttonName: "Sign In",
                   ),
 
                   const SizedBox(height: 30),
