@@ -1,6 +1,6 @@
 import 'package:capstone/login_page/LoginPage.dart';
 import 'package:capstone/login_page/email_login/Test/widget/error_diaalog_widget.dart';
-import 'package:capstone/login_page/providers/auth_provider.dart';
+import 'package:capstone/login_page/providers/auth/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:capstone/login_page/email_login/Test/widget/my_button.dart';
