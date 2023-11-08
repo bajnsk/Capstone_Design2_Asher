@@ -1,4 +1,4 @@
-import 'package:capstone/MainPage/main_page.dart';
+import 'package:capstone/Home/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +6,11 @@ import 'package:flutter/material.dart';
 
 class AuthController{
   void navigateToHome(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuWidget()));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => HomeWidget(),
+      // 뒤로 가기 버튼을 숨기려면 아래 코드를 추가합니다.
+      settings: RouteSettings(name: '/menu'),
+    ));
   }
 }
 

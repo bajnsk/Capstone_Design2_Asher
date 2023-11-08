@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:capstone/login_page/LoginPage.dart';
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
-import 'MainPage/main_page.dart';
+import 'Home//home_page.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'login_page/providers/auth/auth_state.dart';

@@ -6,7 +6,7 @@ import 'package:capstone/login_page/email_login/Test/widget/my_textfield.dart';
 import 'package:capstone/login_page/email_login/Test/widget/square_tile.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:capstone/login_page/email_login/Test/controller/auth_controller.dart';
-import 'package:capstone/MainPage/main_page.dart';
+import 'package:capstone/Home//home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,16 +20,13 @@ class _LoginPage extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void _navigateToHome(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MenuWidget()));
-  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        appBar: null,
           backgroundColor: Colors.grey[300],
           body: Center(
             child: ListView(
