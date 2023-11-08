@@ -1,13 +1,17 @@
 import 'package:capstone/login_page/SignUpPage.dart';
+import 'package:capstone/login_page/email_login/Test/widget/error_diaalog_widget.dart';
 import 'package:capstone/login_page/google_login/c_google_login_process.dart';
+import 'package:capstone/login_page/providers/auth/auth_provider.dart';
+import 'package:capstone/login_page/providers/auth/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/login_page/email_login/Test/widget/my_button.dart';
 import 'package:capstone/login_page/email_login/Test/widget/my_textfield.dart';
 import 'package:capstone/login_page/email_login/Test/widget/square_tile.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:capstone/login_page/email_login/Test/controller/auth_controller.dart';
-import 'package:capstone/Home//home_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+
+import 'email_login/Test/controller/auth_controller.dart';
+import 'exceptions/custom_exception.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,13 +24,13 @@ class _LoginPage extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
+    final authStatus = context.watch<AuthState>().authStatus;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: null,
+          appBar: null,
           backgroundColor: Colors.grey[300],
           body: Center(
             child: ListView(
@@ -104,14 +108,19 @@ class _LoginPage extends State<LoginPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 60),
                   child: MyButton(
                     onPressed: () async {
-                      User? user = await signInWithEmailAndPassword(
-                          emailController.text, passwordController.text);
-                      if (user == null) {
-                        print('Login failed');
-                      } else {
-                        print('Login successful');
-                        AuthController().navigateToHome(context);
+                      try {
+                        await context.read<AuthProvider>().signIn(
+                              email: emailController.text,
+                              password: passwordController.text,
+                            );
+                      } on CustomException catch (e) {
+                        errorDialogWidget(context, e);
                       }
+                      Future.delayed(Duration(seconds: 2), () {
+                        if (authStatus == AuthStatus.unauthenticated) {
+                          AuthController().navigateToHome(context);
+                        }
+                      });
                     },
                     buttonName: "Sign In",
                   ),

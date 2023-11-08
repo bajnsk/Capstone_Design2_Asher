@@ -20,6 +20,23 @@ class AuthProvider extends StateNotifier<AuthState> with LocatorMixin {
     } on CustomException catch (_) {
       rethrow;
     }
+  }
 
+  Future<void> signIn({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await read<AuthRepository>().signIn(
+        email: email,
+        password: password,
+      );
+
+      state = state.copyWith(
+        authStatus: AuthStatus.authenticated,
+      );
+    } on CustomException catch (_) {
+      rethrow;
+    }
   }
 }

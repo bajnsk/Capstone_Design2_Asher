@@ -9,7 +9,7 @@ class CustomException implements Exception {
 
   @override
   String toString() {
-    return 'CustomException{code: $code, message: $message}';
+    return message;
   }
 }
 

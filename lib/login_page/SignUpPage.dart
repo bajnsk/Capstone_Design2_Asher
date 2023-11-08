@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:capstone/login_page/email_login/Test/widget/my_button.dart';
 import 'package:validators/validators.dart';
 import 'package:provider/provider.dart';
-
 import 'exceptions/custom_exception.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -184,10 +183,18 @@ class _SignUpPageState extends State<SignUpPage> {
                                       name: _nameEditingController.text,
                                       password: _passwordEditingController.text,
                                     );
+
                                 if (!mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(),
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
                                   content: Text('인증 메일을 전송했습니다'),
-                                  duration: Duration(seconds: 120),
+                                  duration: Duration(seconds: 5),
                                 ));
                               } on CustomException catch (e) {
                                 setState(() {
@@ -205,7 +212,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     TextButton(
                       onPressed: _isEnabled
                           ? () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => LoginPage()));

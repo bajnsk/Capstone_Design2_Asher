@@ -14,6 +14,39 @@ class AuthRepository {
     required this.firebaseStorage,
   });
 
+  Future<void> signIn({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      UserCredential userCredential =
+          await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      bool isVerified = userCredential.user!.emailVerified;
+      if (!isVerified) {
+        await userCredential.user!.sendEmailVerification();
+        await firebaseAuth.signOut();
+        throw CustomException(
+          code: 'Exception',
+          message: '인증되지 않은 이메일',
+        );
+      }
+    } on FirebaseException catch (e) {
+      throw CustomException(
+        code: e.code,
+        message: e.message!,
+      );
+    } catch (e) {
+      throw CustomException(
+        code: 'Exception',
+        message: e.toString(),
+      );
+    }
+  }
+
   Future<void> signUp({
     required String email,
     required String name,
