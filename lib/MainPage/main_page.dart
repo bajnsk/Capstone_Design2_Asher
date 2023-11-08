@@ -1,12 +1,9 @@
-import 'package:english_words/english_words.dart';
+import '../Nabigator/v_nabigator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:photo_view/photo_view.dart';
 import '../Appbar/v_appbar_widget.dart';
 
-void main() {
-  runApp(MyApp());
-}
 
 class ImageFavoriteData {
   final String imageUrl;
@@ -54,50 +51,34 @@ class MyApp extends StatelessWidget {
 
 // 메뉴
 class MenuWidget extends StatefulWidget {
+
+
+
   @override
-  State<MenuWidget> createState() => _MenuWidgetState();
+  State<MenuWidget> createState() => MenuWidgetState();
 }
-class _MenuWidgetState extends State<MenuWidget> {
-  int _selectedIndex = 0;
+class MenuWidgetState extends State<MenuWidget> {
+
+
+  int selectedIndex = 0;
   List<Widget> menuWidgetList = [
     ImageSearchPageWidget(key: UniqueKey()),
     ContentSearchPageWidget(key: UniqueKey()),
     WatchListPageWidget(key: UniqueKey()),
   ];
 
-  List<String> appBarTitles = ['이미지 검색', '컨텐츠 검색', '관심 목록'];
-
   void selectMenu(int index) {
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(appBarTitles[_selectedIndex]),
-      ),
-      body: menuWidgetList[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.image),
-            label: '이미지 검색',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.content_paste),
-            label: '컨텐츠 검색',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: '관심 목록',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: selectMenu,
-      ),
+      appBar: AsherAppbar(),
+      body: menuWidgetList[selectedIndex],
+      //bottomNavigationBar: AsherBottomNavigationBar(selectedIndex, selectMenu),
     );
   }
 }
@@ -388,7 +369,6 @@ class ImageDetailPageWidgetState extends State<ImageDetailPageWidget> {
     );
   }
 }
-
 
 // 내용 검색
 class ContentSearchPageWidget extends StatefulWidget {

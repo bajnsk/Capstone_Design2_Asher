@@ -1,6 +1,5 @@
+import 'package:capstone/Appbar/v_appbar_widget.dart';
 import 'package:capstone/login_page/providers/auth/auth_provider.dart';
-import 'package:capstone/login_page/providers/feed/feed_provider.dart';
-import 'package:capstone/login_page/providers/feed/feed_state.dart';
 import 'package:capstone/login_page/repositories/auth_repository.dart';
 import 'package:capstone/login_page/repositories/feed_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:capstone/login_page/LoginPage.dart';
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
+import 'MainPage/main_page.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'login_page/providers/auth/auth_state.dart';
@@ -43,9 +43,6 @@ class MyApp extends StatelessWidget {
         ),
         StateNotifierProvider<AuthProvider, AuthState>(
           create: (context) => AuthProvider(),
-        ),
-        StateNotifierProvider<FeedProvider, FeedState>(
-            create: (context) => FeedProvider(),
         ),
       ],
       child: MaterialApp(
