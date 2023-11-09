@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'MainPage/main_page.dart';
 import 'MyPage/my_page.dart';
 import 'TagPage/tag_page.dart';
+import 'Feed/v_feeds.dart';
 
 
 
@@ -29,7 +30,7 @@ class HomeWidgetState extends State<HomeWidget> {
 
   int selectedIndex = 0;
   List<Widget> menuWidgetList = [
-    MainPageWidget(key: UniqueKey()),
+    FeedsView(key: UniqueKey()),
     TagPageWidget(key: UniqueKey()),
     MyPageWidget(key: UniqueKey()),
   ];
