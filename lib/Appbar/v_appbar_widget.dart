@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:capstone/DB/feed_generator.dart';
 
 class AsherAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -28,6 +29,11 @@ class AsherAppbar extends StatelessWidget implements PreferredSizeWidget {
           child: IconButton(
             onPressed: () {
               // 버튼을 눌렀을 때 수행할 동작 추가할 것
+              // DB 테스트용 위젯 연결
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => FeedGenerator()),
+              );
             },
             icon: Icon(Icons.notifications_none, color: Colors.black, size: 30),
           ),
@@ -45,5 +51,3 @@ class AsherAppbar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
-
-
