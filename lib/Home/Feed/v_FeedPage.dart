@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'feed_card.dart';
+import 'v_FeedCardWidget.dart';
 
 class FeedsView extends StatefulWidget {
   const FeedsView({super.key});
 
   @override
-  State<FeedsView> createState() => _HomeScreenState();
+  State<FeedsView> createState() => FeedPageState();
 }
 
-class _HomeScreenState extends State<FeedsView> {
+class FeedPageState extends State<FeedsView> {
   late ScrollController _scrollController;
   late List<int> items;
 
@@ -16,7 +16,7 @@ class _HomeScreenState extends State<FeedsView> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    items = List.generate(30, (index) => index);
+    items = List.generate(6, (index) => index);
     _scrollController.addListener(_scrollListener);
   }
 
@@ -27,7 +27,8 @@ class _HomeScreenState extends State<FeedsView> {
   }
 
   void _scrollListener() {
-    if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
       addItems();
     }
@@ -42,7 +43,7 @@ class _HomeScreenState extends State<FeedsView> {
         if (index == items.length) {
           return SizedBox(height: 20); // 로딩 인디케이터 또는 간격
         }
-        return FeedCard(number: items[index]);
+        return FeedPageWidget(number: items[index]);
       },
     );
   }

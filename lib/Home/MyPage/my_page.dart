@@ -1,6 +1,5 @@
-
-
 import 'package:flutter/material.dart';
+import 'v_my_page.dart';
 
 class MyPageWidget extends StatefulWidget {
   MyPageWidget({Key? key}) : super(key: key);
@@ -17,10 +16,6 @@ class MyPageWidgetState extends State<MyPageWidget> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-
-      ),
-    );
+    return MyPageView();
   }
 }

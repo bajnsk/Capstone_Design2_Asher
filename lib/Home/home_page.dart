@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'MainPage/main_page.dart';
 import 'MyPage/my_page.dart';
 import 'TagPage/tag_page.dart';
-import 'Feed/v_feeds.dart';
+import 'Feed/v_FeedPage.dart';
 
 
 
