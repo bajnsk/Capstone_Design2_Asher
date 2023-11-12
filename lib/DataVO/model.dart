@@ -80,17 +80,24 @@ class DataVO {
         // 문서가 존재하는지 확인
         if (userDoc.exists) {
           // 문서 데이터를 UserDataVO로 매핑
-          myUserData = UserDataVO(
-            uId: userDoc['uid'],
-            followedFeed: userDoc['followedFeed'],
-            friend: userDoc['friends'],
-            likeFeed: userDoc['like'],
-            userName: userDoc['name'],
-            userProfile: userDoc['imageProfile'],
-            tag: userDoc['tag'],
-            myFeed: userDoc['feedIds'],
-          );
-          logger.d(myUserData.toString());
+          Map<String, dynamic>? userDataMap =
+              userDoc.data() as Map<String, dynamic>?;
+
+          if (userDataMap != null && userDataMap.containsKey('userId')) {
+            myUserData = UserDataVO(
+              uId: userDataMap['userId'],
+              followedFeed: userDataMap['followedFeed'],
+              friend: userDataMap['friends'],
+              likeFeed: userDataMap['like'],
+              userName: userDataMap['name'],
+              userProfile: userDataMap['imageProfile'],
+              tag: userDataMap['tag'],
+              myFeed: userDataMap['feedIds'],
+            );
+            logger.d(myUserData.toString());
+          } else {
+            print('사용자 문서에 필수 필드가 누락되었습니다.');
+          }
         } else {
           // 문서가 존재하지 않을 때 처리
           print('사용자 문서가 존재하지 않습니다.');
@@ -130,11 +137,16 @@ class DataVO {
     }
   }
 
-  init() {
-    // 로그인 후 불러 와야할 데이터 모델들을 정의
-    // 사용자 인증 => DataVO 인스턴스 초기화 후 fetchData 호출 해야 함
-    fetchUserData();
-    fetchFeedData();
+  Future<void> init() async {
+    try {
+      // 로그인 후 불러 와야할 데이터 모델들을 정의
+      // 사용자 인증 => DataVO 인스턴스 초기화 후 fetchData 호출 해야 함
+      await fetchUserData();
+      await fetchFeedData();
+    } catch (e) {
+      // 에러 처리
+      print('데이터 초기화 중 오류 발생: $e');
+    }
   }
 
   //DB 받아오기

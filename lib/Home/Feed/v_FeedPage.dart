@@ -13,14 +13,13 @@ class FeedsView extends StatefulWidget {
 class FeedPageState extends State<FeedsView> {
   late ScrollController _scrollController;
   late List<int> items;
-  static late List<FeedDataVO>FollowedFeeds = [];
+  static late List<FeedDataVO> FollowedFeeds = [];
   @override
   void initState() {
     super.initState();
     FollowedFeeds = FeedController.getFollowedFeeds();
     _scrollController = ScrollController();
-    items =
-        List.generate(FollowedFeeds.length, (index) => index);
+    items = List.generate(3, (index) => index);
     _scrollController.addListener(_scrollListener);
   }
 
@@ -48,7 +47,6 @@ class FeedPageState extends State<FeedsView> {
           return SizedBox(height: 30); // 로딩 인디케이터 또는 간격
         }
         return FeedPageWidget(
-          number: items[index],
           FollowedFeeds: FollowedFeeds,
         );
       },
@@ -57,7 +55,7 @@ class FeedPageState extends State<FeedsView> {
 
   void addItems() {
     setState(() {
-      items.addAll(List.generate(10, (index) => index + items.length));
+      items.addAll(List.generate(3, (index) => index + items.length));
     });
   }
 }
