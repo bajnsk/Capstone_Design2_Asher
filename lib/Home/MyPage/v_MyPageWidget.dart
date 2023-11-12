@@ -42,36 +42,46 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(3),
-                  border: Border.all(
-                    color: Colors.grey,
-                  )
-              ),
-              child: const Text(
-                '프로필 수정',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+            child: InkWell(
+              onTap: () {
+                //누를 시 수행할 작업 추가
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
+                    border: Border.all(
+                      color: Colors.grey,
+                    )
                 ),
-                textAlign: TextAlign.center,
+                child: const Text(
+                  '프로필 수정',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ),
           const SizedBox(width: 8,),
-          Container(
-            padding: EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3),
-              border: Border.all(
-                color: Colors.grey,
+          InkWell(
+            onTap: () {
+              //누를 시 수행할 작업 추가
+            },
+            child: Container(
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                border: Border.all(
+                  color: Colors.grey,
+                ),
               ),
-            ),
-            child: Icon(
-                Icons.person_add_alt_1
+              child: Icon(
+                  Icons.person_add_alt_1
+              ),
             ),
           )
         ],
@@ -155,8 +165,13 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
         crossAxisSpacing: 1,
       ),
       itemBuilder: (BuildContext context, int index) {
-        return Container(
-          color: Colors.grey,
+        return GestureDetector(
+          onTap: () {
+            print('Item $index tapped');//눌렀을 때 작동할 코드 추가
+          },
+          child: Container(
+            color: Colors.grey,
+          ),
         );
       },
     );
