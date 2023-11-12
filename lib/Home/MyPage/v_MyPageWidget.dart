@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MyPageView extends StatefulWidget {
-  const MyPageView({super.key});
+class MyPageWidget extends StatefulWidget {
+  const MyPageWidget({super.key});
 
   @override
-  State<MyPageView> createState() => _MyPageViewState();
+  State<MyPageWidget> createState() => _MyPageViewState();
 }
 
-class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin{
+class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin{
   late TabController tabController;
   @override
   void initState(){
@@ -15,6 +15,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin{
     tabController = TabController(length: 2, vsync: this);
   }
 
+  // 사용자의 친구 수 게시글 수 좋아요 누른 수를 나타내기 위한 위젯
   Widget _statisticsOne(String title, int value) {
     return Column(
       children: [
@@ -34,6 +35,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin{
     );
   }
 
+  //프로필 수정 및 친구추가 위젯
   Widget _editprofile(){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 25),
@@ -43,10 +45,10 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin{
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 6),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3),
-                border: Border.all(
-                  color: Colors.grey,
-                )
+                  borderRadius: BorderRadius.circular(3),
+                  border: Border.all(
+                    color: Colors.grey,
+                  )
               ),
               child: const Text(
                 '프로필 수정',
@@ -69,7 +71,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin{
               ),
             ),
             child: Icon(
-              Icons.person_add_alt_1
+                Icons.person_add_alt_1
             ),
           )
         ],
@@ -77,6 +79,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin{
     );
   }
 
+  //사용자 정보 위젯
   Widget _information(){
     return Padding(
       padding: const EdgeInsets.only(top: 15, left: 15),
@@ -84,23 +87,23 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin{
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
-              children: [
-                CircleAvatar(
-                  radius: 35,
-                  backgroundImage: NetworkImage('https://i.namu.wiki/i/AIWsICElbpxe8dupLfOGWKIuPAOZcPTyZosFComIBmsN_ViJ7rP9HEqF_pKM0tllaEciKIEhtZDV0LMcodz8h_-GsCYje9YB_5eBSrJAE8nQsBh1IVPRG2y-Oab3JJZeciEfTjHQVp61BA3DMxgsnQ.webp'),
+            children: [
+              CircleAvatar(
+                radius: 35,
+                backgroundImage: NetworkImage('https://i.namu.wiki/i/AIWsICElbpxe8dupLfOGWKIuPAOZcPTyZosFComIBmsN_ViJ7rP9HEqF_pKM0tllaEciKIEhtZDV0LMcodz8h_-GsCYje9YB_5eBSrJAE8nQsBh1IVPRG2y-Oab3JJZeciEfTjHQVp61BA3DMxgsnQ.webp'),
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _statisticsOne('Friends',15),
+                    _statisticsOne('Feeds',15),
+                    _statisticsOne('Likes',15),
+                  ],
                 ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _statisticsOne('Friends',15),
-                      _statisticsOne('Feeds',15),
-                      _statisticsOne('Likes',15),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
+          ),
           const SizedBox(height: 10,),
           Text(
             'Hi',
@@ -114,23 +117,48 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin{
     );
   }
 
+  //탭 메뉴 위젯
   Widget _tabmenu() {
     return TabBar(
       controller: tabController,
+      indicatorColor: Colors.black,
+      indicatorWeight: 1,
       tabs: [
         Container(
+          padding: EdgeInsets.symmetric(vertical: 10),
           child: Icon(
             Icons.grid_on_outlined,
             color: Colors.black,
           ),
         ),
         Container(
+          padding: EdgeInsets.symmetric(vertical: 10),
           child: Icon(
             Icons.thumb_up_alt_rounded,
             color: Colors.black,
           ),
         )
       ],
+    );
+  }
+
+  //탭뷰 위젯
+  Widget _tabview(){
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: 100,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 1,
+        mainAxisSpacing: 1,
+        crossAxisSpacing: 1,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        return Container(
+          color: Colors.grey,
+        );
+      },
     );
   }
 
@@ -142,6 +170,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin{
           _information(),
           _editprofile(),
           _tabmenu(),
+          _tabview(),
         ],
       ),
     );

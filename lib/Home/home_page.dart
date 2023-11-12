@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'MainPage/main_page.dart';
-import 'MyPage/my_page.dart';
+import 'MyPage/v_MyPage.dart';
 import 'TagPage/tag_page.dart';
 import 'Feed/v_FeedPage.dart';
 
@@ -32,7 +32,7 @@ class HomeWidgetState extends State<HomeWidget> {
   List<Widget> menuWidgetList = [
     FeedsView(key: UniqueKey()),
     TagPageWidget(key: UniqueKey()),
-    MyPageWidget(key: UniqueKey()),
+    MyPageView(key: UniqueKey()),
   ];
 
 
