@@ -1,7 +1,7 @@
 import 'package:capstone/DataVO/model.dart';
 
 class FeedController {
-  static List<FeedDataVO> FollowedFeeds = [];
+  // static List<FeedDataVO> FollowedFeeds = [];
   // 현재 로그인한 유저의 피드를 가져오는 메서드
   static List<FeedDataVO> getFollowedFeeds() {
     // 현재 로그인한 유저의 피드 ID 목록

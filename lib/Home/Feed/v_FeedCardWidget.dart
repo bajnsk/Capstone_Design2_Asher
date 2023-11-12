@@ -1,10 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:capstone/DataVO/model.dart';
 
 class FeedPageWidget extends StatefulWidget {
   int number;
-
-  FeedPageWidget({required this.number});
+  List<FeedDataVO> FollowedFeeds;
+  FeedPageWidget({required this.number, required this.FollowedFeeds});
 
   @override
   State<FeedPageWidget> createState() => _PostCardState();
