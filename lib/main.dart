@@ -1,4 +1,3 @@
-import 'package:capstone/Appbar/v_appbar_widget.dart';
 import 'package:capstone/login_page/providers/auth/auth_provider.dart';
 import 'package:capstone/login_page/repositories/auth_repository.dart';
 import 'package:capstone/login_page/repositories/feed_repository.dart';
@@ -9,11 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:capstone/login_page/LoginPage.dart';
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
-import 'Home//home_page.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'login_page/providers/auth/auth_state.dart';
+import 'package:logger/logger.dart';
 
+var logger = Logger(
+  printer: PrettyPrinter(),
+);
+
+var loggerNoStack = Logger(
+  printer: PrettyPrinter(methodCount: 0),
+);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

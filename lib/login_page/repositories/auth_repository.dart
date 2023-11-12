@@ -72,6 +72,8 @@ class AuthRepository {
         'followedFeed': [],
         'friends': [],
         'feedId': [],
+        'profileImage': null,
+        'tag': [],
       });
 
       firebaseAuth.signOut();
