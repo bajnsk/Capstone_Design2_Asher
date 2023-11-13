@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../DataVO/model.dart';
 
 class DetailPageWidget extends StatefulWidget {
-  const DetailPageWidget({super.key});
+  final FeedDataVO feedData;
+
+  DetailPageWidget({super.key, required this.feedData});
 
   @override
   State<DetailPageWidget> createState() => _DetailPageWidgetState();
@@ -12,19 +15,16 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    FeedDataVO feedData = widget.feedData;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back
-          ),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        title: Text(
-          '이전 페이지'
-        ),
+        title: Text('이전 페이지'),
       ),
       body: Container(
         child: Column(
@@ -51,12 +51,13 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                   CircleAvatar(
                     radius: 15,
                     backgroundImage: NetworkImage(
-                        'https://i.namu.wiki/i/AIWsICElbpxe8dupLfOGWKIuPAOZcPTyZosFComIBmsN_ViJ7rP9HEqF_pKM0tllaEciKIEhtZDV0LMcodz8h_-GsCYje9YB_5eBSrJAE8nQsBh1IVPRG2y-Oab3JJZeciEfTjHQVp61BA3DMxgsnQ.webp'),
+                      'https://i.namu.wiki/i/AIWsICElbpxe8dupLfOGWKIuPAOZcPTyZosFComIBmsN_ViJ7rP9HEqF_pKM0tllaEciKIEhtZDV0LMcodz8h_-GsCYje9YB_5eBSrJAE8nQsBh1IVPRG2y-Oab3JJZeciEfTjHQVp61BA3DMxgsnQ.webp',
+                    ),
                   ),
                   SizedBox(
                     width: 10,
                   ),
-                  Text('userName'),
+                  Text(feedData.userName),
                   Expanded(
                     child: Container(),
                   ),
@@ -90,10 +91,11 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: Image.network(
-                      'https://cdn.fourfourtwo.co.kr/news/photo/202209/19430_41368_1537.jpg',
+                      feedData.image.isNotEmpty && feedData.image.length > 0
+                          ? feedData.image[0]
+                          : 'https://firebasestorage.googleapis.com/v0/b/capstone2-1ad1d.appspot.com/o/smile%20pepe.png?alt=media&token=2240d1b9-b8cd-472a-81b8-d4f3be82335b',
                       fit: BoxFit.cover,
-                      width:
-                      MediaQuery.of(context).size.width - 100, // 조정된 이미지의 폭
+                      width: MediaQuery.of(context).size.width - 100,
                       height: 230,
                     ),
                   ),
@@ -108,7 +110,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                 width: MediaQuery.of(context).size.width - 100,
                 padding: EdgeInsets.only(left: 50, right: 50),
                 child: Text(
-                  '''dashjdfkghjkfadsjghkfasdgjkhㅁㄴㅇ라ㅏㅗㅁ알ㅇㅁ남ㅇ남ㅇㄴㄻㅇ나ㅏㄴ어''',
+                  feedData.context_text,
                   maxLines: 5,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -131,22 +133,26 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                         // 눌렀을 때 수행할 작업
                       },
                       child: Text(
-                        '#홀란드',
+                        feedData.tag.isNotEmpty && feedData.tag.length > 0
+                            ? feedData.tag[0]
+                            : 'tag0',
                         style: TextStyle(color: Colors.grey),
                       ),
                     ),
                   ),
-                  Container(
-                    child: TextButton(
-                      onPressed: () {
-                        // 눌렀을 때 수행할 작업
-                      },
-                      child: Text(
-                        '#잘생김',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   child: TextButton(
+                  //     onPressed: () {
+                  //       // 눌렀을 때 수행할 작업
+                  //     },
+                  //     child: Text(
+                  //       feedData.tag.isNotEmpty && feedData.tag.length > 0
+                  //           ? feedData.tag[1]
+                  //           : 'tag1',
+                  //       style: TextStyle(color: Colors.grey),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
