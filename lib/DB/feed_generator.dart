@@ -2,6 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Appbar/v_appbar_widget.dart';
+import 'dart:typed_data';
+import 'package:uuid/uuid.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
+import '../main.dart';
 
 class FeedGenerator extends StatefulWidget {
   @override
@@ -11,18 +17,21 @@ class FeedGenerator extends StatefulWidget {
 class _FeedGeneratorState extends State<FeedGenerator> {
   final TextEditingController _contentController = TextEditingController();
   final TextEditingController _friendNameController = TextEditingController();
+  final TextEditingController _tagController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  Uint8List? _imageBytes;
+  bool _isUploading = false;
 
   // Firestore 인스턴스 생성
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // 데이터를 Firestore에 추가하는 함수
-  Future<void> addFeedToFirestore(String contentText) async {
+  Future<void> addFeedToFirestore(String contentText, String fileName,String tag) async {
     try {
       User? user = _auth.currentUser;
 
       if (user != null) {
-        // Get the user document from the 'users' collection using the UID
+        // uid를 사용해 users 컬렉션 탐색
         DocumentSnapshot userDoc =
         await _firestore.collection('users').doc(user.uid).get();
 
@@ -36,15 +45,15 @@ class _FeedGeneratorState extends State<FeedGenerator> {
             'content_text': contentText,
             'userId': user.uid,
             'reContentId': null,
-            'image': [],
-            'tag': [],
-            'userName': userName, // Set the userName field with the fetched name
+            'image': fileName.isNotEmpty ? [fileName] : [], // Use list for multiple images
+            'tag': tag,
+            'userName': userName,
           });
 
           String feedId = docRef.id;
-          print('Feed ID: $feedId');
+          logger.d('Feed ID: $feedId');
 
-          // Update the 'feedId' field in the document with the generated feedId
+          // feedid에 생성된 feedid 저장
           await docRef.update({'feedId': feedId});
 
           // Update the 'feedIds' array field in the 'users' collection for the current user
@@ -52,13 +61,13 @@ class _FeedGeneratorState extends State<FeedGenerator> {
             'feedIds': FieldValue.arrayUnion([feedId]),
           });
         } else {
-          print('User document does not exist');
+          logger.d('User document does not exist');
         }
       }
 
-      print('Feed added to Firestore successfully.');
+      logger.d('Feed added to Firestore successfully.');
     } catch (e) {
-      print('Error adding feed to Firestore: $e');
+      logger.d('Error adding feed to Firestore: $e');
     }
   }
 
@@ -86,81 +95,46 @@ class _FeedGeneratorState extends State<FeedGenerator> {
             'friends': FieldValue.arrayUnion([user.uid]),
           });
 
-          print('Friend added successfully.');
+          logger.d('Friend added successfully.');
         } else {
-          print('User with name $friendName not found.');
+          logger.d('User with name $friendName not found.');
         }
       }
     } catch (e) {
-      print('Error adding friend: $e');
+      logger.d('Error adding friend: $e');
     }
   }
 
-  // 친구의 피드를 가져오는 함수
-  Future<List<Map<String, dynamic>>> getFriendFeeds() async {
+  // 이미지 추가 함수
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      // 이미지를 Uint8List로 변환
+      List<int> imageBytes = await image.readAsBytes();
+      setState(() {
+        _imageBytes = Uint8List.fromList(imageBytes);
+      });
+    }
+  }
+
+  //이미지 Storage에 저장
+  Future<void> uploadImageToFirebaseStorage(Uint8List imageBytes, String fileName) async {
     try {
-      User? user = _auth.currentUser;
-      print(user);
+      Reference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
+      UploadTask uploadTask = firebaseStorageRef.putData(imageBytes);
 
-      if (user != null) {
-        // 사용자의 문서를 가져옴
-        DocumentSnapshot<Map<String, dynamic>> userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
-        print(userDoc);
+      TaskSnapshot taskSnapshot = await uploadTask;
+      logger.d('Image uploaded to Firebase Storage: ${taskSnapshot.ref}');
 
-        // 사용자 친구의 uId 목록을 가져옴
-        List<dynamic> friendUids = userDoc.data()?['friends'] ?? [];
-        print(friendUids);
-
-        // 친구의 feedId 목록을 가져옴
-        List<dynamic> friendFeedIds = [];
-        print(friendFeedIds);
-
-        // 각 친구의 feedId 목록을 합침
-        for (var friendUid in friendUids) {
-          DocumentSnapshot<Map<String, dynamic>> friendDoc =
-              await _firestore.collection('users').doc(friendUid).get();
-          friendFeedIds.addAll(friendDoc.data()?['feedIds'] ?? []);
-          print(friendDoc);
-        }
-
-        // 사용자와 친구의 feedId 목록을 합침
-        List<dynamic> allFeedIds = [...friendFeedIds];
-        print(allFeedIds);
-
-        if (allFeedIds.isNotEmpty) {
-          // feedId 목록을 사용하여 피드를 가져옴
-          QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
-              .collection('feeds')
-              .where('feedId', whereIn: allFeedIds)
-              .orderBy('makeTime', descending: true)
-              .get();
-
-          List<Map<String, dynamic>> friendFeeds = querySnapshot.docs
-              .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
-                  doc.data() as Map<String, dynamic>)
-              .toList();
-          print(friendFeeds);
-          return friendFeeds;
-        }
-      }
-
-      return [];
     } catch (e) {
-      print('친구의 피드를 가져오는 중 오류 발생: $e');
-      return [];
+      logger.d('Error uploading image to Firebase Storage: $e');
     }
   }
 
-// 친구 피드 테스트
-  void _fetchFriendFeeds() async {
-    List<Map<String, dynamic>> friendFeeds = await getFriendFeeds();
+  // Firestore Database에 이미지 파일 이름 저장
 
-    // 친구의 피드에 대해 처리
-    for (var feed in friendFeeds) {
-      print('친구 피드 내용: ${feed['content_text']}');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,15 +144,50 @@ class _FeedGeneratorState extends State<FeedGenerator> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            if (_imageBytes != null)
+              Image.memory(
+                _imageBytes!,
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // 이미지 선택
+                _pickImage();
+              },
+              child: Text('Select Image'),
+            ),
+            // 이미지 업로드 중일 때 표시되는 위젯
+            if (_isUploading)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              ),
             TextField(
               controller: _contentController,
               decoration: InputDecoration(labelText: 'Feed Content'),
             ),
             SizedBox(height: 16.0),
+            TextField(
+              controller: _tagController,
+              decoration: InputDecoration(labelText: 'tag'),
+            ),
             ElevatedButton(
               onPressed: () {
-                // 텍스트 필드에서 얻은 내용을 Firestore에 추가
-                addFeedToFirestore(_contentController.text);
+                if (_imageBytes != null) {
+                  // 이미지가 선택되었을 때만 피드 저장
+                  // Firebase Storage에 이미지 업로드
+                  String fileName = Uuid().v4(); // UUID로 파일 이름 생성
+                  uploadImageToFirebaseStorage(_imageBytes!, fileName);
+
+                  // 텍스트 필드에서 얻은 내용을 Firestore에 추가
+                  addFeedToFirestore(_contentController.text, fileName, _tagController.text);
+                } else {
+                  // 이미지가 선택되지 않은 경우에 대한 처리
+                  print('Please select an image before adding feed to Firestore.');
+                }
               },
               child: Text('Add Feed to Firestore'),
             ),
@@ -200,13 +209,6 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                   child: Text('Add Friend'),
                 ),
                 SizedBox(width: 8.0),
-                ElevatedButton(
-                  onPressed: () {
-                    // 새로운 버튼을 누를 때 친구 피드를 가져오는 함수 호출
-                    _fetchFriendFeeds();
-                  },
-                  child: Text('Get Friend Feeds'),
-                ),
               ],
             ),
           ],
