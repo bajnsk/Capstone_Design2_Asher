@@ -6,7 +6,6 @@ import 'dart:typed_data';
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import '../main.dart';
 
 class FeedGenerator extends StatefulWidget {
