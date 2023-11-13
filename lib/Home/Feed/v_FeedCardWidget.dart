@@ -82,7 +82,7 @@ class _PostCardState extends State<FeedPageWidget> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailPageWidget(),
+                  builder: (context) => DetailPageWidget(feedData: feedData,),
                 ),
               );
             },
@@ -116,7 +116,7 @@ class _PostCardState extends State<FeedPageWidget> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailPageWidget(),
+                  builder: (context) => DetailPageWidget(feedData: feedData,),
                 ),
               );
             },
@@ -148,7 +148,7 @@ class _PostCardState extends State<FeedPageWidget> {
                   },
                   child: Text(
                     // Replace '#홀란드' with your first tag
-                    '#Tag1',
+                    feedData.tag[0],
                     style: TextStyle(color: Colors.grey),
                   ),
                 ),
