@@ -15,7 +15,8 @@ class FeedPageState extends State<FeedsView> {
   late ScrollController _scrollController;
   late List<int> items;
   late int index;
-  static late List<FeedDataVO> FollowedFeeds = [];
+  late List<FeedDataVO> FollowedFeeds = [];
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +45,12 @@ class FeedPageState extends State<FeedsView> {
     }
   }
 
+  void addItems() {
+    setState(() {
+      items.addAll(List.generate(3, (index) => index + items.length));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -59,11 +66,5 @@ class FeedPageState extends State<FeedsView> {
         );
       },
     );
-  }
-
-  void addItems() {
-    setState(() {
-      items.addAll(List.generate(3, (index) => index + items.length));
-    });
   }
 }

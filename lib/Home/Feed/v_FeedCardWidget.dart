@@ -82,7 +82,9 @@ class _PostCardState extends State<FeedPageWidget> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailPageWidget(feedData: feedData,),
+                  builder: (context) => DetailPageWidget(
+                    feedData: feedData,
+                  ),
                 ),
               );
             },
@@ -116,7 +118,9 @@ class _PostCardState extends State<FeedPageWidget> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailPageWidget(feedData: feedData,),
+                  builder: (context) => DetailPageWidget(
+                    feedData: feedData,
+                  ),
                 ),
               );
             },
@@ -153,18 +157,18 @@ class _PostCardState extends State<FeedPageWidget> {
                   ),
                 ),
               ),
-              Container(
-                child: TextButton(
-                  onPressed: () {
-                    // Add the action for the second tag
-                  },
-                  child: Text(
-                    // Replace '#잘생김' with your second tag
-                    '#Tag2',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
+              // Container(
+              //   child: TextButton(
+              //     onPressed: () {
+              //       // Add the action for the second tag
+              //     },
+              //     child: Text(
+              //       // Replace '#잘생김' with your second tag
+              //       tag2,
+              //       style: TextStyle(color: Colors.grey),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           // 작성 날짜 및 마음, 댓글, 리컨텐츠 컨테이너

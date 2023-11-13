@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../main.dart';
 // 파베로 부터 받아온 데이터를 리스트 형태로 저장시켜놓는 공간
 
@@ -137,7 +136,7 @@ class DataVO {
     }
   }
 
- void init() async {
+  void init() async {
     try {
       // 로그인 후 불러 와야할 데이터 모델들을 정의
       // 사용자 인증 => DataVO 인스턴스 초기화 후 fetchData 호출 해야 함
