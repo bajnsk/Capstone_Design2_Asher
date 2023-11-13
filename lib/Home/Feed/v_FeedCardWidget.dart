@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:capstone/Home/Feed/v_DetailPageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
@@ -97,7 +96,7 @@ class _PostCardState extends State<FeedPageWidget> {
                     borderRadius: BorderRadius.circular(15),
                     // Replace the Image.network with your desired image
                     child: Image.network(
-                      'https://your-image-url.jpg',
+                      'https://firebasestorage.googleapis.com/v0/b/capstone2-1ad1d.appspot.com/o/pepe.jfif?alt=media&token=753c6188-cc77-4c18-953a-b8db8b89c8a1',
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width - 100,
                       height: 230,

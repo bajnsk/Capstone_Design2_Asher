@@ -137,7 +137,7 @@ class DataVO {
     }
   }
 
-  Future<void> init() async {
+ void init() async {
     try {
       // 로그인 후 불러 와야할 데이터 모델들을 정의
       // 사용자 인증 => DataVO 인스턴스 초기화 후 fetchData 호출 해야 함

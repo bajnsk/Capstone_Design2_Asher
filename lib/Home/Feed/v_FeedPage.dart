@@ -1,5 +1,6 @@
 import 'package:capstone/DataVO/model.dart';
 import 'package:flutter/material.dart';
+import '../../main.dart';
 import 'v_FeedCardWidget.dart';
 import 'package:capstone/Home/Feed/c_FeedPageController.dart';
 
@@ -17,10 +18,15 @@ class FeedPageState extends State<FeedsView> {
   @override
   void initState() {
     super.initState();
-    FollowedFeeds = FeedController.getFollowedFeeds();
     _scrollController = ScrollController();
     items = List.generate(3, (index) => index);
     _scrollController.addListener(_scrollListener);
+
+    Future.delayed(Duration(seconds: 2), () async {
+      FollowedFeeds = await FeedController.getFollowedFeeds();
+      logger.d(FollowedFeeds);
+      setState(() {}); // 상태를 갱신하여 UI를 다시 빌드
+    });
   }
 
   @override
