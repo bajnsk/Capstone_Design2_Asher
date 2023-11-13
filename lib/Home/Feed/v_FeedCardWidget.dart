@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:capstone/Home/Feed/v_DetailPageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 
@@ -74,40 +75,60 @@ class _PostCardState extends State<FeedPageWidget> {
             child: Text('글의 종류'),
           ),
           // 사진 컨테이너
-          Container(
-            height: 250,
-            width: MediaQuery.of(context).size.width,
-            child: Center(
-              child: Container(
-                margin: EdgeInsets.only(left: 50, right: 50),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailPageWidget(),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  // Replace the Image.network with your desired image
-                  child: Image.network(
-                    'https://your-image-url.jpg',
-                    fit: BoxFit.cover,
-                    width: MediaQuery.of(context).size.width - 100,
-                    height: 230,
+              );
+            },
+            child: Container(
+              height: 250,
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: Container(
+                  margin: EdgeInsets.only(left: 50, right: 50),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    // Replace the Image.network with your desired image
+                    child: Image.network(
+                      'https://your-image-url.jpg',
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width - 100,
+                      height: 230,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
           // 본문 컨테이너
-          Container(
-            width: MediaQuery.of(context).size.width - 100,
-            padding: EdgeInsets.only(left: 50, right: 50),
-            // Replace the text content as needed
-            child: Text(
-              '''Replace this text with your content''',
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailPageWidget(),
+                ),
+              );
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width - 100,
+              padding: EdgeInsets.only(left: 50, right: 50),
+              // Replace the text content as needed
+              child: Text(
+                '''Replace this text with your content''',
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
               ),
             ),
           ),
