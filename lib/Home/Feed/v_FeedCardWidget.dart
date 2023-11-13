@@ -1,10 +1,12 @@
 import 'package:capstone/Home/Feed/v_DetailPageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
+import 'package:capstone/main.dart';
 
 class FeedPageWidget extends StatefulWidget {
-  List<FeedDataVO> FollowedFeeds;
-  FeedPageWidget({super.key, required this.FollowedFeeds});
+  final List<FeedDataVO> FollowedFeeds;
+  final int index;
+  FeedPageWidget({super.key, required this.FollowedFeeds, required this.index});
 
   @override
   State<FeedPageWidget> createState() => _PostCardState();
@@ -15,6 +17,7 @@ class _PostCardState extends State<FeedPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    FeedDataVO feedData = widget.FollowedFeeds[widget.index];
     return ListTile(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +52,7 @@ class _PostCardState extends State<FeedPageWidget> {
                   width: 10,
                 ),
                 // Replace 'userName' with the actual username
-                Text('userName'),
+                Text(feedData.userName),
                 Expanded(
                   child: Container(),
                 ),
@@ -96,7 +99,8 @@ class _PostCardState extends State<FeedPageWidget> {
                     borderRadius: BorderRadius.circular(15),
                     // Replace the Image.network with your desired image
                     child: Image.network(
-                      'https://firebasestorage.googleapis.com/v0/b/capstone2-1ad1d.appspot.com/o/pepe.jfif?alt=media&token=753c6188-cc77-4c18-953a-b8db8b89c8a1',
+                      //'https://firebasestorage.googleapis.com/v0/b/capstone2-1ad1d.appspot.com/o/pepe.jfif?alt=media&token=753c6188-cc77-4c18-953a-b8db8b89c8a1',
+                      feedData.image[0],
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width - 100,
                       height: 230,
@@ -121,7 +125,8 @@ class _PostCardState extends State<FeedPageWidget> {
               padding: EdgeInsets.only(left: 50, right: 50),
               // Replace the text content as needed
               child: Text(
-                '''Replace this text with your content''',
+                //'''Replace this text with your content''',
+                feedData.context_text,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -197,6 +202,7 @@ class _PostCardState extends State<FeedPageWidget> {
                     ),
                     InkWell(
                       onTap: () {
+                        logger.d(feedData);
                         // Add the action for the repeat icon
                       },
                       child: Padding(

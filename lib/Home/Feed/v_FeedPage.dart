@@ -14,6 +14,7 @@ class FeedsView extends StatefulWidget {
 class FeedPageState extends State<FeedsView> {
   late ScrollController _scrollController;
   late List<int> items;
+  late int index;
   static late List<FeedDataVO> FollowedFeeds = [];
   @override
   void initState() {
@@ -47,13 +48,14 @@ class FeedPageState extends State<FeedsView> {
   Widget build(BuildContext context) {
     return ListView.builder(
       controller: _scrollController,
-      itemCount: items.length + 1,
+      itemCount: FollowedFeeds.length + items.length,
       itemBuilder: (BuildContext context, int index) {
-        if (index == items.length) {
+        if (index >= FollowedFeeds.length) {
           return SizedBox(height: 30); // 로딩 인디케이터 또는 간격
         }
         return FeedPageWidget(
           FollowedFeeds: FollowedFeeds,
+          index: index,
         );
       },
     );
