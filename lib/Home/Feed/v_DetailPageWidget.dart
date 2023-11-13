@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import '../../DataVO/model.dart';
+import 'package:logger/logger.dart';
+
+import '../../main.dart';
 
 class DetailPageWidget extends StatefulWidget {
-  const DetailPageWidget({super.key});
+  final FeedDataVO feedData;
+
+  DetailPageWidget({Key? key, required this.feedData}) : super(key: key);
 
   @override
   State<DetailPageWidget> createState() => _DetailPageWidgetState();
@@ -12,19 +18,16 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    FeedDataVO feedData = widget.feedData;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back
-          ),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        title: Text(
-          '이전 페이지'
-        ),
+        title: Text('이전 페이지'),
       ),
       body: Container(
         child: Column(
@@ -50,13 +53,13 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                 children: [
                   CircleAvatar(
                     radius: 15,
-                    backgroundImage: NetworkImage(
-                        'https://i.namu.wiki/i/AIWsICElbpxe8dupLfOGWKIuPAOZcPTyZosFComIBmsN_ViJ7rP9HEqF_pKM0tllaEciKIEhtZDV0LMcodz8h_-GsCYje9YB_5eBSrJAE8nQsBh1IVPRG2y-Oab3JJZeciEfTjHQVp61BA3DMxgsnQ.webp'),
+                    backgroundImage: NetworkImage('https://i.namu.wiki/i/AIWsICElbpxe8dupLfOGWKIuPAOZcPTyZosFComIBmsN_ViJ7rP9HEqF_pKM0tllaEciKIEhtZDV0LMcodz8h_-GsCYje9YB_5eBSrJAE8nQsBh1IVPRG2y-Oab3JJZeciEfTjHQVp61BA3DMxgsnQ.webp',
+                    ),
                   ),
                   SizedBox(
                     width: 10,
                   ),
-                  Text('userName'),
+                  Text(feedData.userName),
                   Expanded(
                     child: Container(),
                   ),
@@ -90,10 +93,9 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: Image.network(
-                      'https://cdn.fourfourtwo.co.kr/news/photo/202209/19430_41368_1537.jpg',
+                      feedData.image,
                       fit: BoxFit.cover,
-                      width:
-                      MediaQuery.of(context).size.width - 100, // 조정된 이미지의 폭
+                      width: MediaQuery.of(context).size.width - 100,
                       height: 230,
                     ),
                   ),
@@ -108,7 +110,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                 width: MediaQuery.of(context).size.width - 100,
                 padding: EdgeInsets.only(left: 50, right: 50),
                 child: Text(
-                  '''dashjdfkghjkfadsjghkfasdgjkhㅁㄴㅇ라ㅏㅗㅁ알ㅇㅁ남ㅇ남ㅇㄴㄻㅇ나ㅏㄴ어''',
+                  feedData.context_text,
                   maxLines: 5,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -131,7 +133,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                         // 눌렀을 때 수행할 작업
                       },
                       child: Text(
-                        '#홀란드',
+                        feedData.tag[1],
                         style: TextStyle(color: Colors.grey),
                       ),
                     ),
@@ -142,7 +144,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                         // 눌렀을 때 수행할 작업
                       },
                       child: Text(
-                        '#잘생김',
+                        feedData.tag[1],
                         style: TextStyle(color: Colors.grey),
                       ),
                     ),
