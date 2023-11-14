@@ -27,7 +27,7 @@ class FeedPageState extends State<FeedsView> {
     Future.delayed(Duration(seconds: 2), () async {
       FollowedFeeds = await FeedController.getFollowedFeeds();
       logger.d(FollowedFeeds);
-      setState(() {}); // 상태를 갱신하여 UI를 다시 빌드
+      setState(() {});
     });
   }
 
@@ -55,15 +55,14 @@ class FeedPageState extends State<FeedsView> {
   Widget build(BuildContext context) {
     return ListView.builder(
       controller: _scrollController,
-      itemCount: FollowedFeeds.length + items.length,
+      itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         if (index >= FollowedFeeds.length) {
           return SizedBox(height: 30); // 로딩 인디케이터 또는 간격
         }
-        return FeedPageWidget(
-          FollowedFeeds: FollowedFeeds,
-          index: index,
-        );
+        FeedDataVO feedData = FollowedFeeds[index];
+        return FeedCardWidget(
+            FollowedFeeds: FollowedFeeds, feedData: feedData, index: index);
       },
     );
   }

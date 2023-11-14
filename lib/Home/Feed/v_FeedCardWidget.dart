@@ -3,16 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 import 'package:capstone/main.dart';
 
-class FeedPageWidget extends StatefulWidget {
+class FeedCardWidget extends StatefulWidget {
   final List<FeedDataVO> FollowedFeeds;
+  final FeedDataVO feedData;
   final int index;
-  FeedPageWidget({super.key, required this.FollowedFeeds, required this.index});
+  FeedCardWidget(
+      {super.key,
+      required this.FollowedFeeds,
+      required this.feedData,
+      required this.index});
 
   @override
-  State<FeedPageWidget> createState() => _PostCardState();
+  State<FeedCardWidget> createState() => _FeedCardState();
 }
 
-class _PostCardState extends State<FeedPageWidget> {
+class _FeedCardState extends State<FeedCardWidget> {
   bool isFavorite = false; //좋아요 체크를 위한 변수 선언
 
   @override
