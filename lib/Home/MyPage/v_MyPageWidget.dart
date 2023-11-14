@@ -3,7 +3,16 @@ import 'package:capstone/DataVO/model.dart';
 
 
 class MyPageWidget extends StatefulWidget {
-  const MyPageWidget({super.key});
+  final List<FeedDataVO> FollowedFeeds;
+  final FeedDataVO feedData;
+  final int index;
+
+  MyPageWidget({
+    super.key,
+    required this.FollowedFeeds,
+    required this.feedData,
+    required this.index,
+  });
 
   @override
   State<MyPageWidget> createState() => _MyPageViewState();
@@ -11,6 +20,7 @@ class MyPageWidget extends StatefulWidget {
 
 class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin{
   late TabController tabController;
+
   @override
   void initState(){
     super.initState();
@@ -95,6 +105,7 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
 
   // 사용자 정보 위젯
   Widget _information() {
+    FeedDataVO feedData = widget.FollowedFeeds[widget.index];
     return Padding(
       padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
       child: Container(
@@ -118,7 +129,7 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Username', // Replace with the actual username
+                            feedData.userName, // Replace with the actual username
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.black,
@@ -204,6 +215,7 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
 
   //탭뷰 위젯
   Widget _tabview(){
+    FeedDataVO feedData = widget.FollowedFeeds[widget.index];
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -220,7 +232,11 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
             print('Item $index tapped');//눌렀을 때 작동할 코드 추가
           },
           child: Container(
-            color: Colors.grey,
+            child: ClipRRect(
+              child: Image.network(
+                feedData.image[0]
+              ),
+            ),
           ),
         );
       },
@@ -229,6 +245,7 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+
     return SingleChildScrollView(
       child: Column(
         children: [
