@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:capstone/DataVO/model.dart';
+
 
 class MyPageWidget extends StatefulWidget {
   const MyPageWidget({super.key});
@@ -16,20 +18,22 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
   }
 
   // 사용자의 친구 수 게시글 수 좋아요 누른 수를 나타내기 위한 위젯
-  Widget _statisticsOne(String title, int value) {
-    return Column(
+  Widget _statisticsOne(int value, String title) {
+    return Row(
       children: [
         Text(
           value.toString(),
           style: const TextStyle(
+
             fontSize: 20,
             color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
+        SizedBox(width: 5,),
         Text(
           title,
-          style: const TextStyle(fontSize: 15, color: Colors.black),
+          style: const TextStyle(fontSize: 20, color: Colors.black),
         )
       ],
     );
@@ -38,7 +42,7 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
   //프로필 수정 및 친구추가 위젯
   Widget _editprofile(){
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 25),
+      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
       child: Row(
         children: [
           Expanded(
@@ -89,43 +93,89 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
     );
   }
 
-  //사용자 정보 위젯
-  Widget _information(){
+  // 사용자 정보 위젯
+  Widget _information() {
     return Padding(
-      padding: const EdgeInsets.only(top: 15, left: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 35,
-                backgroundImage: NetworkImage('https://i.namu.wiki/i/AIWsICElbpxe8dupLfOGWKIuPAOZcPTyZosFComIBmsN_ViJ7rP9HEqF_pKM0tllaEciKIEhtZDV0LMcodz8h_-GsCYje9YB_5eBSrJAE8nQsBh1IVPRG2y-Oab3JJZeciEfTjHQVp61BA3DMxgsnQ.webp'),
-              ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
+      child: Container(
+        alignment: Alignment.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 55,
+              backgroundImage: NetworkImage(
+                  'https://i.namu.wiki/i/AIWsICElbpxe8dupLfOGWKIuPAOZcPTyZosFComIBmsN_ViJ7rP9HEqF_pKM0tllaEciKIEhtZDV0LMcodz8h_-GsCYje9YB_5eBSrJAE8nQsBh1IVPRG2y-Oab3JJZeciEfTjHQVp61BA3DMxgsnQ.webp'),
+            ),
+            SizedBox(height: 15),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
                   children: [
-                    _statisticsOne('Friends',15),
-                    _statisticsOne('Feeds',15),
-                    _statisticsOne('Likes',15),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Username', // Replace with the actual username
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            'Some additional text', // Replace with actual text
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        //버튼 누를시 작동할 것 추가
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(3),
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.edit, // Replace with the icon you want
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10,),
-          Text(
-            'Hi',
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.black,
+                SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _statisticsOne(15, 'Friends'),
+                    _statisticsOne(15, 'Feeds'),
+                    _statisticsOne(15, 'Likes'),
+                  ],
+                ),
+              ],
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
+
+
+
+
+
 
   //탭 메뉴 위젯
   Widget _tabmenu() {
