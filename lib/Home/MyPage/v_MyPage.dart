@@ -12,22 +12,29 @@ class MyPageView extends StatefulWidget {
   @override
   State<MyPageView> createState() => MyPageWidgetState();
 }
+
 class MyPageWidgetState extends State<MyPageView> {
-  late List<FeedDataVO> MyFeedsList = [];
-  late List<FeedDataVO> iLikeFeedsList = [];
+  late List<FeedDataVO> MyFeedsList = MyController.myFeedsList;
+  late List<FeedDataVO> iLikeFeedsList = MyController.myFeedsList;
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 1), () async {
-      MyFeedsList = await MyController.getMyFeedsList();
+      MyController.myFeedsList = await MyController.getMyFeedsList();
       logger.d(MyFeedsList);
-      iLikeFeedsList = await MyController.getMyFeedsList();
+      MyController.iLikeFeedsList = await MyController.getMyFeedsList();
+      if (MyController.iLikeFeedsList.isEmpty) {
+        logger.d('adfsafsafdsafdsafdsafsdafdasfdasfdsafdsafdsafadsfdsafdas');
+      } else {
+        logger.d('111111111111111111111111111111111111111111111111111111111');
+      }
       logger.d(iLikeFeedsList);
       setState(() {});
     });
     // Initially, show all items
   }
+
   @override
   Widget build(BuildContext context) {
     return MyPageWidget();

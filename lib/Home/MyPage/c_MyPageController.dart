@@ -2,6 +2,9 @@ import 'package:capstone/DataVO/model.dart';
 import '../../main.dart';
 
 class MyController {
+  static List<FeedDataVO> myFeedsList = [];
+  static List<FeedDataVO> iLikeFeedsList = [];
+
   static Future<List<FeedDataVO>> getMyFeedsList() async {
     // 현재 로그인한 유저의 피드 ID 목록
     late List<dynamic> myFeedIds = DataVO.myUserData.myFeed;

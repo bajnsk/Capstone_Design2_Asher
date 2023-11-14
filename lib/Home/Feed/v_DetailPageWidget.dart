@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../DataVO/model.dart';
+import '../../main.dart';
+import 'c_FeedPageController.dart';
 
 class DetailPageWidget extends StatefulWidget {
   final FeedDataVO feedData;
@@ -16,13 +18,14 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
   @override
   Widget build(BuildContext context) {
     FeedDataVO feedData = widget.feedData;
+    String date = FeedTypeController.internal().makeTimeTodate(feedData);
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey[300], // 백그라운드 색상을 화이트로 설정
-        elevation: 0, // 앱 바의 그림자를 제거하여 구분선을 없앰
+        backgroundColor: Colors.grey[300],
+        elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Colors.black), // 뒤로가기 아이콘을 추가하고 색상을 검정으로 설정
+          icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -30,8 +33,9 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
       ),
       body: Container(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 아바타 + 이름 컨테이너
+            // 프로필과 유저네임 컨테이너
             Container(
               height: 50,
               width: MediaQuery.of(context).size.width,
@@ -56,47 +60,26 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                       'https://i.namu.wiki/i/AIWsICElbpxe8dupLfOGWKIuPAOZcPTyZosFComIBmsN_ViJ7rP9HEqF_pKM0tllaEciKIEhtZDV0LMcodz8h_-GsCYje9YB_5eBSrJAE8nQsBh1IVPRG2y-Oab3JJZeciEfTjHQVp61BA3DMxgsnQ.webp',
                     ),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+                  SizedBox(width: 10),
                   Text(feedData.userName),
-                  Expanded(
-                    child: Container(),
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: Icon(Icons.more_vert),
-                  )
                 ],
               ),
             ),
-            // 글의 종류 컨테이너
-            // 태그 컨테이너
+            // 날짜 컨테이너
             Container(
-              padding: EdgeInsets.only(left: 50),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  for (String tag in feedData.tag)
-                    TextButton(
-                      onPressed: () {
-                        // Add the action for each tag
-                      },
-                      child: Text(
-                        tag,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                ],
+              margin: EdgeInsets.only(left: 30, right: 30, top: 10),
+              child: Text(
+                date,
+                style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ),
             // 사진 컨테이너
             Container(
-              height: 300, // 조절된 높이
+              height: 300,
               width: MediaQuery.of(context).size.width,
               child: Center(
                 child: Container(
-                  margin: EdgeInsets.only(left: 50, right: 50),
+                  margin: EdgeInsets.only(left: 50, right: 50, top: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -116,74 +99,77 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
             ),
             // 본문 컨테이너
             Container(
-              height: null, // 높이를 자동으로 조절하도록 설정
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                width: MediaQuery.of(context).size.width - 100,
-                padding: EdgeInsets.only(left: 50, right: 50),
-                child: Text(
-                  feedData.context_text,
-                  maxLines: 5,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
+              width: MediaQuery.of(context).size.width - 100,
+              padding: EdgeInsets.only(left: 50, right: 50, top: 10),
+              child: Text(
+                feedData.context_text,
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
                 ),
+              ),
+            ),
+            // 태그 컨테이너
+            Container(
+              padding: EdgeInsets.only(left: 50, top: 10),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  for (String tag in feedData.tag)
+                    TextButton(
+                      onPressed: () {
+                        // Add the action for each tag
+                      },
+                      child: Text(
+                        tag,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                ],
               ),
             ),
             // 작성 날짜 및 마음, 댓글, 리컨텐츠 컨테이너
             Container(
-              height: 40,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                margin: EdgeInsets.only(left: 30, right: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      child: Text(
-                        '23/09/15 Fri xx:xx',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+              margin: EdgeInsets.only(left: 30, right: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          // Add the action for the favorite icon
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(3.0),
+                          child: Icon(Icons.favorite_border),
+                        ),
                       ),
+                      InkWell(
+                        onTap: () {
+                          // Add the action for the message icon
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(3.0),
+                          child: Icon(Icons.message),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Spacer(),
+                  InkWell(
+                    onTap: () {
+                      logger.d(feedData);
+                      // Add the action for the repeat icon
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(3.0),
+                      child: Icon(Icons.repeat),
                     ),
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              isFavorite = !isFavorite;
-                            });
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(3.0), // 간격 조절
-                            child: isFavorite
-                                ? Icon(Icons.favorite, color: Colors.red)
-                                : Icon(Icons.favorite_border),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // 메시지 버튼이 눌렸을 때 수행할 작업 추가
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(3.0), // 간격 조절
-                            child: Icon(Icons.message),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // 반복 버튼이 눌렸을 때 수행할 작업 추가
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(3.0), // 간격 조절
-                            child: Icon(Icons.repeat),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],

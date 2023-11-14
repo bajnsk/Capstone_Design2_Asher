@@ -73,7 +73,7 @@ class FeedPageState extends State<FeedsView> {
           } else if (allFeedsChecked) {
             return AllFeedsCheckedWidget();
           } else {
-            return SizedBox(height: 30); // 로딩 인디케이터 또는 간격
+            return SizedBox(height: 50); // 로딩 인디케이터 또는 간격
           }
         });
   }

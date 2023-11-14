@@ -153,6 +153,6 @@ class DataVO {
   static late UserDataVO myUserData;
   // 전체 Feed data 리스트 화 => DB에서 받아오기
   static List<FeedDataVO> feedData = [];
+
   // 나와 연관된 내 피드 정보, 관심 피드 정보, 나한테 팔로우 된 피드 정보 가공하기
-  static List<RelationFeedDataVO> relationFeed = [];
 }

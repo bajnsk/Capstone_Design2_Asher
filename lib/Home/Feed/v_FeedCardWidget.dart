@@ -8,11 +8,13 @@ class FeedCardWidget extends StatefulWidget {
   final List<FeedDataVO> FollowedFeeds;
   final FeedDataVO feedData;
   final int index;
-  FeedCardWidget(
-      {super.key,
-      required this.FollowedFeeds,
-      required this.feedData,
-      required this.index});
+
+  FeedCardWidget({
+    super.key,
+    required this.FollowedFeeds,
+    required this.feedData,
+    required this.index,
+  });
 
   @override
   State<FeedCardWidget> createState() => _FeedCardState();
@@ -25,11 +27,12 @@ class _FeedCardState extends State<FeedCardWidget> {
   Widget build(BuildContext context) {
     FeedDataVO feedData = widget.FollowedFeeds[widget.index];
     String date = FeedTypeController.internal().makeTimeTodate(feedData);
+
     return ListTile(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 아바타 + 이름 컨테이너
+          // 프로필과 유저네임 컨테이너
           Container(
             height: 50,
             width: MediaQuery.of(context).size.width,
@@ -70,23 +73,12 @@ class _FeedCardState extends State<FeedCardWidget> {
               ],
             ),
           ),
-          // 태그 컨테이너
+          // 날짜 컨테이너
           Container(
-            padding: EdgeInsets.only(left: 50),
-            alignment: Alignment.centerLeft,
-            child: Row(
-              children: [
-                for (String tag in feedData.tag)
-                  TextButton(
-                    onPressed: () {
-                      // Add the action for each tag
-                    },
-                    child: Text(
-                      tag,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-              ],
+            margin: EdgeInsets.only(left: 30, right: 30, top: 10),
+            child: Text(
+              date,
+              style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ),
           // 사진 컨테이너
@@ -106,7 +98,7 @@ class _FeedCardState extends State<FeedCardWidget> {
               width: MediaQuery.of(context).size.width,
               child: Center(
                 child: Container(
-                  margin: EdgeInsets.only(left: 50, right: 50),
+                  margin: EdgeInsets.only(left: 50, right: 50, top: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -142,13 +134,33 @@ class _FeedCardState extends State<FeedCardWidget> {
               padding: EdgeInsets.only(left: 50, right: 50),
               child: Text(
                 feedData.context_text,
-                maxLines: 5,
+                maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
                   color: Colors.grey,
                 ),
               ),
+            ),
+          ),
+          // 태그 컨테이너
+          Container(
+            padding: EdgeInsets.only(left: 50, top: 10),
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                for (String tag in feedData.tag)
+                  TextButton(
+                    onPressed: () {
+                      // Add the action for each tag
+                    },
+                    child: Text(
+                      tag,
+                      style: TextStyle(color: Colors.blueAccent, fontSize: 18),
+                    ),
+                  ),
+              ],
             ),
           ),
           // 작성 날짜 및 마음, 댓글, 리컨텐츠 컨테이너
@@ -157,14 +169,6 @@ class _FeedCardState extends State<FeedCardWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  child: Text(
-                    //feedData.makeTime.toString(),
-                    //'23/09/15 Fri xx:xx',
-                    date,
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                ),
                 Row(
                   children: [
                     InkWell(
@@ -185,18 +189,20 @@ class _FeedCardState extends State<FeedCardWidget> {
                         child: Icon(Icons.message),
                       ),
                     ),
-                    InkWell(
-                      onTap: () {
-                        logger.d(feedData);
-                        // Add the action for the repeat icon
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(3.0),
-                        child: Icon(Icons.repeat),
-                      ),
-                    ),
                   ],
-                )
+                ),
+                // Spacer 추가
+                Spacer(),
+                InkWell(
+                  onTap: () {
+                    logger.d(feedData);
+                    // Add the action for the repeat icon
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(3.0),
+                    child: Icon(Icons.repeat),
+                  ),
+                ),
               ],
             ),
           ),
