@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 
+import '../Feed/v_DetailPageWidget.dart';
+
 class MyPageWidget extends StatefulWidget {
   final List<FeedDataVO> MyFeedsList;
   final FeedDataVO feedData;
@@ -217,7 +219,7 @@ class _MyPageViewState extends State<MyPageWidget>
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: 100,
+      itemCount: feedData.feedId.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         childAspectRatio: 1,
@@ -227,7 +229,14 @@ class _MyPageViewState extends State<MyPageWidget>
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           onTap: () {
-            print('Item $index tapped'); //눌렀을 때 작동할 코드 추가
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailPageWidget(
+                  feedData: feedData,
+                ),
+              ),
+            ); //눌렀을 때 작동할 코드 추가
           },
           child: Container(
             child: ClipRRect(
