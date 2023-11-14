@@ -1,3 +1,4 @@
+import 'package:capstone/Home/Feed/c_FeedPageController.dart';
 import 'package:capstone/Home/Feed/v_DetailPageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
@@ -23,6 +24,7 @@ class _FeedCardState extends State<FeedCardWidget> {
   @override
   Widget build(BuildContext context) {
     FeedDataVO feedData = widget.FollowedFeeds[widget.index];
+    String date = FeedTypeController.internal().makeTimeTodate(feedData);
     return ListTile(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +159,9 @@ class _FeedCardState extends State<FeedCardWidget> {
               children: [
                 Container(
                   child: Text(
-                    '23/09/15 Fri xx:xx',
+                    //feedData.makeTime.toString(),
+                    //'23/09/15 Fri xx:xx',
+                    date,
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 ),
