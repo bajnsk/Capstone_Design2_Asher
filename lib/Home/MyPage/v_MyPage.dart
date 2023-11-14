@@ -35,7 +35,7 @@ class MyPageWidgetState extends State<MyPageView> {
 
   @override
   Widget build(BuildContext context) {
-    FeedDataVO feedData = widget.MyFeedsList[index];
+    FeedDataVO feedData = MyFeedsList[index]; // 수정된 부분
     return MyPageWidget(
       MyFeedsList: MyFeedsList,
       feedData: feedData,
@@ -43,4 +43,3 @@ class MyPageWidgetState extends State<MyPageView> {
     );
   }
 }
-
