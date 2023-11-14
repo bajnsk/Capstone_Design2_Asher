@@ -14,8 +14,8 @@ class AsherAppbar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             Text(
               'Asher',
-              style: GoogleFonts.bebasNeue(
-                fontSize: 30,
+              style: GoogleFonts.nanumPenScript(
+                fontSize: 60,
                 color: Colors.grey[700],
               ),
             ),

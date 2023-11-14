@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../main.dart';
+import 'c_MyPageController.dart';
 import 'v_MyPageWidget.dart';
 import 'package:capstone/DataVO/model.dart';
 import 'package:logger/logger.dart';
@@ -16,19 +17,16 @@ class MyPageView extends StatefulWidget {
 class MyPageWidgetState extends State<MyPageView> {
   late List<FeedDataVO> MyFeedsList = MyController.myFeedsList;
   late List<FeedDataVO> iLikeFeedsList = MyController.myFeedsList;
+  late int index = 0; // index를 초기화
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 1), () async {
       MyController.myFeedsList = await MyController.getMyFeedsList();
+      MyFeedsList = await MyController.myFeedsList;
       logger.d(MyFeedsList);
       MyController.iLikeFeedsList = await MyController.getMyFeedsList();
-      if (MyController.iLikeFeedsList.isEmpty) {
-        logger.d('adfsafsafdsafdsafdsafsdafdasfdasfdsafdsafdsafadsfdsafdas');
-      } else {
-        logger.d('111111111111111111111111111111111111111111111111111111111');
-      }
       logger.d(iLikeFeedsList);
       setState(() {});
     });
@@ -37,6 +35,11 @@ class MyPageWidgetState extends State<MyPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return MyPageWidget();
+    FeedDataVO feedData = MyFeedsList[index]; // 수정된 부분
+    return MyPageWidget(
+      MyFeedsList: MyFeedsList,
+      feedData: feedData,
+      index: index,
+    );
   }
 }

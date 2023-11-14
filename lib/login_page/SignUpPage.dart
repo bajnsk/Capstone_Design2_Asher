@@ -53,8 +53,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     Center(
                       child: Text(
                         'Asher',
-                        style: GoogleFonts.bebasNeue(
-                          fontSize: 52,
+                        style: GoogleFonts.nanumPenScript(
+                          fontSize: 100,
                         ),
                       ),
                     ),

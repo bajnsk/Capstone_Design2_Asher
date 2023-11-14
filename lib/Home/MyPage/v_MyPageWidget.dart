@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 
-
 class MyPageWidget extends StatefulWidget {
-  const MyPageWidget({super.key});
+  final List<FeedDataVO> MyFeedsList;
+  final FeedDataVO feedData;
+  final int index;
+
+  MyPageWidget({
+    super.key,
+    required this.MyFeedsList,
+    required this.feedData,
+    required this.index,
+  });
 
   @override
   State<MyPageWidget> createState() => _MyPageViewState();
 }
 
-class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin{
+class _MyPageViewState extends State<MyPageWidget>
+    with TickerProviderStateMixin {
   late TabController tabController;
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     tabController = TabController(length: 2, vsync: this);
   }
@@ -24,13 +34,14 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
         Text(
           value.toString(),
           style: const TextStyle(
-
             fontSize: 20,
             color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(width: 5,),
+        SizedBox(
+          width: 5,
+        ),
         Text(
           title,
           style: const TextStyle(fontSize: 20, color: Colors.black),
@@ -40,9 +51,9 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
   }
 
   //프로필 수정 및 친구추가 위젯
-  Widget _editprofile(){
+  Widget _editprofile() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       child: Row(
         children: [
           Expanded(
@@ -56,8 +67,7 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
                     borderRadius: BorderRadius.circular(3),
                     border: Border.all(
                       color: Colors.grey,
-                    )
-                ),
+                    )),
                 child: const Text(
                   '프로필 수정',
                   style: TextStyle(
@@ -70,7 +80,9 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
               ),
             ),
           ),
-          const SizedBox(width: 8,),
+          const SizedBox(
+            width: 8,
+          ),
           InkWell(
             onTap: () {
               //누를 시 수행할 작업 추가
@@ -83,9 +95,7 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
                   color: Colors.grey,
                 ),
               ),
-              child: Icon(
-                  Icons.person_add_alt_1
-              ),
+              child: Icon(Icons.person_add_alt_1),
             ),
           )
         ],
@@ -95,6 +105,7 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
 
   // 사용자 정보 위젯
   Widget _information() {
+    FeedDataVO feedData = widget.MyFeedsList[widget.index];
     return Padding(
       padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
       child: Container(
@@ -118,7 +129,8 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Username', // Replace with the actual username
+                            feedData
+                                .userName, // Replace with the actual username
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.black,
@@ -155,7 +167,9 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
                     ),
                   ],
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -171,11 +185,6 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
       ),
     );
   }
-
-
-
-
-
 
   //탭 메뉴 위젯
   Widget _tabmenu() {
@@ -203,7 +212,8 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
   }
 
   //탭뷰 위젯
-  Widget _tabview(){
+  Widget _tabview() {
+    FeedDataVO feedData = widget.MyFeedsList[widget.index];
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -217,10 +227,12 @@ class _MyPageViewState extends State<MyPageWidget> with TickerProviderStateMixin
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           onTap: () {
-            print('Item $index tapped');//눌렀을 때 작동할 코드 추가
+            print('Item $index tapped'); //눌렀을 때 작동할 코드 추가
           },
           child: Container(
-            color: Colors.grey,
+            child: ClipRRect(
+              child: Image.network(feedData.image[0]),
+            ),
           ),
         );
       },
