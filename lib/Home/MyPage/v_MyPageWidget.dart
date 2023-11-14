@@ -8,12 +8,11 @@ class MyPageWidget extends StatefulWidget {
   final FeedDataVO feedData;
   final int index;
 
-  MyPageWidget({
-    super.key,
-    required this.MyFeedsList,
-    required this.feedData,
-    required this.index,
-  });
+  MyPageWidget(
+      {super.key,
+      required this.MyFeedsList,
+      required this.feedData,
+      required this.index});
 
   @override
   State<MyPageWidget> createState() => _MyPageViewState();
@@ -215,11 +214,17 @@ class _MyPageViewState extends State<MyPageWidget>
 
   //탭뷰 위젯
   Widget _tabview() {
+    if (widget.MyFeedsList.isEmpty) {
+      return Center(
+        child: Text('No feeds available'),
+      );
+    }
     FeedDataVO feedData = widget.MyFeedsList[widget.index];
+
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: feedData.feedId.length,
+      itemCount: widget.MyFeedsList.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         childAspectRatio: 1,

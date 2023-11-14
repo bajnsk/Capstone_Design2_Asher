@@ -1,11 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../main.dart';
 import 'c_MyPageController.dart';
 import 'v_MyPageWidget.dart';
 import 'package:capstone/DataVO/model.dart';
-import 'package:logger/logger.dart';
-import 'c_MyPageController.dart';
 
 class MyPageView extends StatefulWidget {
   MyPageView({Key? key}) : super(key: key);
@@ -30,16 +27,15 @@ class MyPageWidgetState extends State<MyPageView> {
       logger.d(iLikeFeedsList);
       setState(() {});
     });
-    // Initially, show all items
   }
 
   @override
   Widget build(BuildContext context) {
+    if (MyFeedsList.isEmpty || index < 0 || index >= MyFeedsList.length) {
+      return CircularProgressIndicator(); // 또는 에러를 표시하는 등의 처리
+    }
     FeedDataVO feedData = MyFeedsList[index]; // 수정된 부분
     return MyPageWidget(
-      MyFeedsList: MyFeedsList,
-      feedData: feedData,
-      index: index,
-    );
+        MyFeedsList: MyFeedsList, feedData: feedData, index: index);
   }
 }
