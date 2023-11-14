@@ -174,9 +174,9 @@ class _MyPageViewState extends State<MyPageWidget>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _statisticsOne(15, 'Friends'),
-                    _statisticsOne(15, 'Feeds'),
-                    _statisticsOne(15, 'Likes'),
+                    _statisticsOne(DataVO.myUserData.friend.length, 'Friends'),
+                    _statisticsOne(DataVO.myUserData.myFeed.length, 'Feeds'),
+                    _statisticsOne(DataVO.myUserData.likeFeed.length, 'Likes'),
                   ],
                 ),
               ],
@@ -214,13 +214,6 @@ class _MyPageViewState extends State<MyPageWidget>
 
   //탭뷰 위젯
   Widget _tabview() {
-    if (widget.MyFeedsList.isEmpty) {
-      return Center(
-        child: Text('No feeds available'),
-      );
-    }
-    FeedDataVO feedData = widget.MyFeedsList[widget.index];
-
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -232,6 +225,7 @@ class _MyPageViewState extends State<MyPageWidget>
         crossAxisSpacing: 1,
       ),
       itemBuilder: (BuildContext context, int index) {
+        FeedDataVO feedData = widget.MyFeedsList[index];
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -241,7 +235,7 @@ class _MyPageViewState extends State<MyPageWidget>
                   feedData: feedData,
                 ),
               ),
-            ); //눌렀을 때 작동할 코드 추가
+            ); // 눌렀을 때 작동할 코드 추가
           },
           child: Container(
             child: ClipRRect(
