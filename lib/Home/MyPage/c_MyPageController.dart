@@ -8,7 +8,7 @@ class MyController {
     logger.d(myFeedIds);
 
     // 피드 ID를 사용하여 실제 피드 데이터를 비동기적으로 가져오기
-    List<FeedDataVO> myFeedsList = await fetchMyFeeds(myFeedIds);
+    List<FeedDataVO> myFeedsList = await fetchMyFeedsList(myFeedIds);
 
     // 피드를 날짜 기준으로 정렬
     myFeedsList.sort((a, b) => b.makeTime.compareTo(a.makeTime));

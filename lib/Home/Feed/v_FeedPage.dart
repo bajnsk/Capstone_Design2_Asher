@@ -26,7 +26,7 @@ class FeedPageState extends State<FeedsView> {
     items = List.generate(3, (index) => index);
     _scrollController.addListener(_scrollListener);
 
-    Future.delayed(Duration(seconds: 3), () async {
+    Future.delayed(Duration(seconds: 1), () async {
       FollowedFeeds = await FeedController.getFollowedFeeds();
       logger.d(FollowedFeeds);
       setState(() {});
