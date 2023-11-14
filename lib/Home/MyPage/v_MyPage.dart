@@ -24,11 +24,6 @@ class MyPageWidgetState extends State<MyPageView> {
       MyController.myFeedsList = await MyController.getMyFeedsList();
       logger.d(MyFeedsList);
       MyController.iLikeFeedsList = await MyController.getMyFeedsList();
-      if (MyController.iLikeFeedsList.isEmpty) {
-        logger.d('adfsafsafdsafdsafdsafsdafdasfdasfdsafdsafdsafadsfdsafdas');
-      } else {
-        logger.d('111111111111111111111111111111111111111111111111111111111');
-      }
       logger.d(iLikeFeedsList);
       setState(() {});
     });

@@ -39,8 +39,8 @@ class _LoginPage extends State<LoginPage> {
                 Center(
                   child: Text(
                     'Asher',
-                    style: GoogleFonts.bebasNeue(
-                      fontSize: 52,
+                    style: GoogleFonts.nanumPenScript(
+                      fontSize: 100,
                     ),
                   ),
                 ),
@@ -54,17 +54,6 @@ class _LoginPage extends State<LoginPage> {
                 ),
 
                 const SizedBox(height: 20),
-
-                // welcome back
-                Center(
-                  child: Text(
-                    'Welcome back!',
-                    style: TextStyle(
-                      color: Colors.grey[700],
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
 
                 const SizedBox(height: 25),
 
