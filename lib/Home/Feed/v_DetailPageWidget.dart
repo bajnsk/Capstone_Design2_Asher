@@ -18,18 +18,20 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
     FeedDataVO feedData = widget.feedData;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[300], // 백그라운드 색상을 화이트로 설정
+        elevation: 0, // 앱 바의 그림자를 제거하여 구분선을 없앰
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back,
+              color: Colors.black), // 뒤로가기 아이콘을 추가하고 색상을 검정으로 설정
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        title: Text('이전 페이지'),
       ),
       body: Container(
         child: Column(
           children: [
-            //아바타 + 이름 컨테이너
+            // 아바타 + 이름 컨테이너
             Container(
               height: 50,
               width: MediaQuery.of(context).size.width,
@@ -68,19 +70,29 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                 ],
               ),
             ),
-            //글의 종류 컨테이너
+            // 글의 종류 컨테이너
+            // 태그 컨테이너
             Container(
-              height: 40,
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.only(
-                left: 50,
-                top: 15,
+              padding: EdgeInsets.only(left: 50),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  for (String tag in feedData.tag)
+                    TextButton(
+                      onPressed: () {
+                        // Add the action for each tag
+                      },
+                      child: Text(
+                        tag,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                ],
               ),
-              child: Text('글의 종류'),
             ),
-            //사진 컨테이너
+            // 사진 컨테이너
             Container(
-              height: 250,
+              height: 300, // 조절된 높이
               width: MediaQuery.of(context).size.width,
               child: Center(
                 child: Container(
@@ -96,13 +108,13 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                           : 'https://firebasestorage.googleapis.com/v0/b/capstone2-1ad1d.appspot.com/o/smile%20pepe.png?alt=media&token=2240d1b9-b8cd-472a-81b8-d4f3be82335b',
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width - 100,
-                      height: 230,
+                      height: 280,
                     ),
                   ),
                 ),
               ),
             ),
-            //본문 컨테이너
+            // 본문 컨테이너
             Container(
               height: null, // 높이를 자동으로 조절하도록 설정
               width: MediaQuery.of(context).size.width,
@@ -120,43 +132,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                 ),
               ),
             ),
-            //태그 컨테이너
-            Container(
-              height: 40,
-              child: Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 50),
-                    alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      onPressed: () {
-                        // 눌렀을 때 수행할 작업
-                      },
-                      child: Text(
-                        feedData.tag.isNotEmpty && feedData.tag.length > 0
-                            ? feedData.tag[0]
-                            : 'tag0',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                  ),
-                  // Container(
-                  //   child: TextButton(
-                  //     onPressed: () {
-                  //       // 눌렀을 때 수행할 작업
-                  //     },
-                  //     child: Text(
-                  //       feedData.tag.isNotEmpty && feedData.tag.length > 0
-                  //           ? feedData.tag[1]
-                  //           : 'tag1',
-                  //       style: TextStyle(color: Colors.grey),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
-            //작성 날짜 및 마음, 댓글, 리컨텐츠 컨테이너
+            // 작성 날짜 및 마음, 댓글, 리컨텐츠 컨테이너
             Container(
               height: 40,
               width: MediaQuery.of(context).size.width,

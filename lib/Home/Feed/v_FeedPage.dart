@@ -1,5 +1,6 @@
 import 'package:capstone/DataVO/model.dart';
 import 'package:flutter/material.dart';
+import 'package:capstone/Home/Feed/v_AllFeedCheckedWidget.dart';
 import '../../main.dart';
 import 'v_FeedCardWidget.dart';
 import 'package:capstone/Home/Feed/c_FeedPageController.dart';
@@ -16,6 +17,7 @@ class FeedPageState extends State<FeedsView> {
   late List<int> items;
   late int index;
   late List<FeedDataVO> FollowedFeeds = [];
+  bool allFeedsChecked = false;
 
   @override
   void initState() {
@@ -24,7 +26,7 @@ class FeedPageState extends State<FeedsView> {
     items = List.generate(3, (index) => index);
     _scrollController.addListener(_scrollListener);
 
-    Future.delayed(Duration(seconds: 2), () async {
+    Future.delayed(Duration(seconds: 3), () async {
       FollowedFeeds = await FeedController.getFollowedFeeds();
       logger.d(FollowedFeeds);
       setState(() {});
@@ -47,23 +49,32 @@ class FeedPageState extends State<FeedsView> {
 
   void addItems() {
     setState(() {
-      items.addAll(List.generate(3, (index) => index + items.length));
+      if (items.length < FollowedFeeds.length) {
+        items.addAll(List.generate(3, (index) => index + items.length));
+      } else {
+        allFeedsChecked = true;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      controller: _scrollController,
-      itemCount: items.length,
-      itemBuilder: (BuildContext context, int index) {
-        if (index >= FollowedFeeds.length) {
-          return SizedBox(height: 30); // 로딩 인디케이터 또는 간격
-        }
-        FeedDataVO feedData = FollowedFeeds[index];
-        return FeedCardWidget(
-            FollowedFeeds: FollowedFeeds, feedData: feedData, index: index);
-      },
-    );
+        controller: _scrollController,
+        itemCount: allFeedsChecked ? FollowedFeeds.length + 1 : items.length,
+        itemBuilder: (BuildContext context, int index) {
+          if (index < FollowedFeeds.length) {
+            FeedDataVO feedData = FollowedFeeds[index];
+            return FeedCardWidget(
+              FollowedFeeds: FollowedFeeds,
+              feedData: feedData,
+              index: index,
+            );
+          } else if (allFeedsChecked) {
+            return AllFeedsCheckedWidget();
+          } else {
+            return SizedBox(height: 30); // 로딩 인디케이터 또는 간격
+          }
+        });
   }
 }
