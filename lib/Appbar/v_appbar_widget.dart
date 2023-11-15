@@ -30,7 +30,7 @@ class AsherAppbar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () {
               // 버튼을 눌렀을 때 수행할 동작 추가할 것
               // DB 테스트용 위젯 연결
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => FeedGenerator()),
               );
