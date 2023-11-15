@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CheckAnimationWidget extends StatefulWidget {
@@ -65,7 +66,6 @@ class AllFeedsCheckedWidget extends StatelessWidget {
             "모든 피드를 확인하셨습니다.",
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
             ),
           ),
         ],
