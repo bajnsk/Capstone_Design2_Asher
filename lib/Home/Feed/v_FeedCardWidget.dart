@@ -27,6 +27,7 @@ class _FeedCardState extends State<FeedCardWidget> {
   Widget build(BuildContext context) {
     FeedDataVO feedData = widget.FollowedFeeds[widget.index];
     String date = FeedTypeController.internal().makeTimeTodate(feedData);
+
     return ListTile(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
