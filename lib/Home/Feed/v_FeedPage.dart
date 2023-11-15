@@ -60,21 +60,29 @@ class FeedPageState extends State<FeedsView> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        controller: _scrollController,
-        itemCount: allFeedsChecked ? FollowedFeeds.length + 1 : items.length,
-        itemBuilder: (BuildContext context, int index) {
-          if (index < FollowedFeeds.length) {
-            FeedDataVO feedData = FollowedFeeds[index];
-            return FeedCardWidget(
-              FollowedFeeds: FollowedFeeds,
-              feedData: feedData,
-              index: index,
-            );
-          } else if (allFeedsChecked) {
-            return AllFeedsCheckedWidget();
-          } else {
-            return SizedBox(height: 10); // 로딩 인디케이터 또는 간격
-          }
-        });
+      controller: _scrollController,
+      itemCount: allFeedsChecked ? FollowedFeeds.length + 1 : items.length,
+      itemBuilder: (BuildContext context, int index) {
+        if (index < FollowedFeeds.length) {
+          FeedDataVO feedData = FollowedFeeds[index];
+          return FeedCardWidget(
+            FollowedFeeds: FollowedFeeds,
+            feedData: feedData,
+            index: index,
+          );
+        } else if (allFeedsChecked) {
+          return AllFeedsCheckedWidget();
+        } else {
+          // 로딩 중에는 디자인된 CircularProgressIndicator를 표시
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+              // 원하는 색상으로 변경
+              strokeWidth: 4, // 선의 두께 조절
+            ),
+          );
+        }
+      },
+    );
   }
 }

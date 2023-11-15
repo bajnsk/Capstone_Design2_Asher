@@ -32,8 +32,15 @@ class MyPageWidgetState extends State<MyPageView> {
   @override
   Widget build(BuildContext context) {
     if (MyFeedsList.isEmpty || index < 0 || index >= MyFeedsList.length) {
-      return CircularProgressIndicator(); // 또는 에러를 표시하는 등의 처리
+      return Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+          // 원하는 색상으로 변경
+          strokeWidth: 4, // 선의 두께 조절
+        ),
+      );
     }
+
     FeedDataVO feedData = MyFeedsList[index]; // 수정된 부분
     return MyPageWidget(
         MyFeedsList: MyFeedsList, feedData: feedData, index: index);
