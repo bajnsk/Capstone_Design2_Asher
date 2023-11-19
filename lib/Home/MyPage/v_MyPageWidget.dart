@@ -7,13 +7,11 @@ class MyPageWidget extends StatefulWidget {
   final List<FeedDataVO> MyFeedsList;
   final FeedDataVO feedData;
   final int index;
-
   MyPageWidget(
       {super.key,
       required this.MyFeedsList,
       required this.feedData,
       required this.index});
-
   @override
   State<MyPageWidget> createState() => _MyPageViewState();
 }
@@ -21,7 +19,6 @@ class MyPageWidget extends StatefulWidget {
 class _MyPageViewState extends State<MyPageWidget>
     with TickerProviderStateMixin {
   late TabController tabController;
-
   @override
   void initState() {
     super.initState();
