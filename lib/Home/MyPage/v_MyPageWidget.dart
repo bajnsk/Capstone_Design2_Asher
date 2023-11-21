@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 
 import '../Feed/v_DetailPageWidget.dart';
+import 'package:capstone/Home/MyPage/v_MyPageAddFriendPopup.dart';
 
 class MyPageWidget extends StatefulWidget {
   final List<FeedDataVO> MyFeedsList;
@@ -19,6 +20,7 @@ class MyPageWidget extends StatefulWidget {
 class _MyPageViewState extends State<MyPageWidget>
     with TickerProviderStateMixin {
   late TabController tabController;
+  TextEditingController _controller = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -84,6 +86,12 @@ class _MyPageViewState extends State<MyPageWidget>
           InkWell(
             onTap: () {
               //누를 시 수행할 작업 추가
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return MyPageAddFriendPopup(); // 위에서 정의한 팝업 위젯
+                },
+              );
             },
             child: Container(
               padding: EdgeInsets.all(4),
