@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -227,91 +229,153 @@ class _FeedGeneratorState extends State<FeedGenerator> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+        child: Center(
           child: Column(
-            children: [
-              if (_imageBytes != null)
-                Image.memory(
-                  _imageBytes!,
-                  width: 200,
-                  height: 200,
-                  fit: BoxFit.cover,
+              children: [
+                if (_imageBytes != null)
+                  Image.memory(
+                    _imageBytes!,
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                ElevatedButton(
+                  onPressed: () {
+                    // 이미지 선택
+                    _pickImage();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[300]!),
+                  ),
+                  child: Text(
+                    'Select Image',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // 이미지 선택
-                  _pickImage();
-                },
-                child: Text('Select Image'),
-              ),
-              // 이미지 업로드 중일 때 표시되는 위젯
-              if (_isUploading)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
+                // 이미지 업로드 중일 때 표시되는 위젯
+                if (_isUploading)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                SizedBox(height: 10,),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey,width: 2),
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 0,
+                        blurRadius: 5,
+                        offset: Offset(0,7),
+                      )
+                    ]
+                  ),
+                  padding: const EdgeInsets.only(left: 10,right: 10),
+                  height: 150,
+                  width: MediaQuery.of(context).size.width-50,
+                  child: TextFormField(
+                    controller: _contentController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: '내용을 입력하세요.',
+                      border: InputBorder.none,
+                    ),
+                  ),
                 ),
-              TextField(
-                controller: _contentController,
-                decoration: InputDecoration(labelText: 'Feed Content'),
-              ),
-              SizedBox(height: 16.0),
-              TextField(
-                controller: _tagController,
-                decoration: InputDecoration(labelText: 'tag'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_imageBytes != null) {
-                    FocusScope.of(context).unfocus();
-                    // 이미지가 선택되었을 때만 피드 저장
-                    // 이미지 파일의 경로를 얻어 Firebase Storage에 업로드
+                SizedBox(height: 20,),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey,width: 2),
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 0,
+                        blurRadius: 5,
+                        offset: Offset(0,5),
+                      )
+                    ]
+                  ),
+                  padding: const EdgeInsets.only(left: 10,right: 10),
+                  height: 50,
+                  width: MediaQuery.of(context).size.width-50,
+                  child: TextFormField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    controller: _tagController,
+                    decoration: InputDecoration(
+                      hintText: '태그를 입력하세요.',
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10,),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_imageBytes != null) {
+                      FocusScope.of(context).unfocus();
+                      // 이미지가 선택되었을 때만 피드 저장
+                      // 이미지 파일의 경로를 얻어 Firebase Storage에 업로드
 
-                    // 임시 파일 생성
-                    io.File file = await _createTempFile(_imageBytes!);
-                    await uploadImageToFirebaseStorage(file);
-                    // 텍스트 필드에서 얻은 내용을 Firestore에 추가
-                    await _addFeedToFirestore(
-                      _contentController.text,
-                      file.path,
-                      _tagController.text,
-                    );// 이미지 파일의 경로를 사용
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Feed를 등록했습니다.')),
-                    );
-                  } else {
-                    // 이미지가 선택되지 않은 경우에 대한 처리
-                    print(
-                        'Please select an image before adding feed to Firestore.');
-                  }
-                },
-                child: Text('Add Feed to Firestore'),
-              ),
-              SizedBox(height: 16.0),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: TextField(
-              //         controller: _friendNameController,
-              //         decoration: InputDecoration(labelText: 'Friend Name'),
-              //       ),
-              //     ),
-              //     SizedBox(width: 8.0),
-              //     ElevatedButton(
-              //       onPressed: () {
-              //         // // 텍스트 필드에서 얻은 이름으로 친구 추가
-              //         addFriendByName(_friendNameController.text);
-              //       },
-              //       child: Text('Add Friend'),
-              //     ),
-              //     SizedBox(width: 8.0),
-              //   ],
-              // ),
-            ],
-          ),
+                      // 임시 파일 생성
+                      io.File file = await _createTempFile(_imageBytes!);
+                      await uploadImageToFirebaseStorage(file);
+                      // 텍스트 필드에서 얻은 내용을 Firestore에 추가
+                      await _addFeedToFirestore(
+                        _contentController.text,
+                        file.path,
+                        _tagController.text,
+                      );// 이미지 파일의 경로를 사용
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Feed를 등록했습니다.')),
+                      );
+                    } else {
+                      // 이미지가 선택되지 않은 경우에 대한 처리
+                      print(
+                          'Please select an image before adding feed to Firestore.');
+                    }
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[300]!),
+                  ),
+                  child: Text(
+                    'Upload Feed',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: TextField(
+                //         controller: _friendNameController,
+                //         decoration: InputDecoration(labelText: 'Friend Name'),
+                //       ),
+                //     ),
+                //     SizedBox(width: 8.0),
+                //     ElevatedButton(
+                //       onPressed: () {
+                //         // // 텍스트 필드에서 얻은 이름으로 친구 추가
+                //         addFriendByName(_friendNameController.text);
+                //       },
+                //       child: Text('Add Friend'),
+                //     ),
+                //     SizedBox(width: 8.0),
+                //   ],
+                // ),
+              ],
+            ),
         ),
-      ),
+        ),
     );
   }
 }
