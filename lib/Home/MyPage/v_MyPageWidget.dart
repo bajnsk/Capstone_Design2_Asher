@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 
+import '../../DB/feed_generator.dart';
 import '../Feed/v_DetailPageWidget.dart';
 import 'package:capstone/Home/MyPage/v_MyPageAddFriendPopup.dart';
 
@@ -156,7 +157,11 @@ class _MyPageViewState extends State<MyPageWidget>
                     ),
                     InkWell(
                       onTap: () {
-                        //버튼 누를시 작동할 것 추가
+                        //연필 아이콘 누르면 피드 작성 페이지로 이동
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => FeedGenerator()),
+                          );
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
