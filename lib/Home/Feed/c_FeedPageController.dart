@@ -1,13 +1,11 @@
 import 'package:capstone/DataVO/model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../main.dart';
 
 import 'dart:async';
 
 class FeedController {
   static Future<List<FeedDataVO>> getFollowedFeeds() async {
     List<dynamic> followedFeedIds = DataVO.myUserData.followedFeed;
-    logger.d(followedFeedIds);
 
     List<FeedDataVO> followedFeeds = await _fetchFollowedFeeds(followedFeedIds);
 
@@ -15,7 +13,6 @@ class FeedController {
     for (FeedDataVO f in followedFeeds) {
       print(f.feedId);
     }
-    logger.d(followedFeeds);
 
     return followedFeeds;
   }

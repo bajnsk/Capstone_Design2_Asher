@@ -8,7 +8,6 @@ class MyController {
   static Future<List<FeedDataVO>> getMyFeedsList() async {
     // 현재 로그인한 유저의 피드 ID 목록
     late List<dynamic> myFeedIds = DataVO.myUserData.myFeed;
-    logger.d(myFeedIds);
 
     // 피드 ID를 사용하여 실제 피드 데이터를 비동기적으로 가져오기
     List<FeedDataVO> myFeedsList = await fetchMyFeedsList(myFeedIds);
@@ -18,7 +17,6 @@ class MyController {
     for (FeedDataVO f in myFeedsList) {
       print(f.feedId);
     }
-    logger.d(myFeedsList);
 
     return myFeedsList;
   }

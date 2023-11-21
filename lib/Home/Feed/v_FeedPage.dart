@@ -1,7 +1,6 @@
 import 'package:capstone/DataVO/model.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/Home/Feed/v_AllFeedCheckedWidget.dart';
-import '../../main.dart';
 import 'v_FeedCardWidget.dart';
 import 'package:capstone/Home/Feed/c_FeedPageController.dart';
 
@@ -28,7 +27,6 @@ class FeedPageState extends State<FeedsView> {
 
     Future.delayed(Duration(seconds: 1), () async {
       FollowedFeeds = await FeedController.getFollowedFeeds();
-      logger.d(FollowedFeeds);
       setState(() {});
     });
   }

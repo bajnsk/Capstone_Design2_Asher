@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../main.dart';
 import 'c_MyPageController.dart';
 import 'v_MyPageWidget.dart';
 import 'package:capstone/DataVO/model.dart';
@@ -22,9 +21,7 @@ class MyPageWidgetState extends State<MyPageView> {
     Future.delayed(Duration(seconds: 1), () async {
       MyController.myFeedsList = await MyController.getMyFeedsList();
       MyFeedsList = await MyController.myFeedsList;
-      logger.d(MyFeedsList);
       MyController.iLikeFeedsList = await MyController.getMyFeedsList();
-      logger.d(iLikeFeedsList);
       setState(() {});
     });
   }
