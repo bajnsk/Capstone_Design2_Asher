@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../main.dart';
 // 파베로 부터 받아온 데이터를 리스트 형태로 저장시켜놓는 공간
 
 // 유저 데이터에 대한 모델링 > 리스트
@@ -93,7 +92,6 @@ class DataVO {
               tag: userDataMap['tag'],
               myFeed: userDataMap['feedIds'],
             );
-            logger.d(myUserData.toString());
           } else {
             print('사용자 문서에 필수 필드가 누락되었습니다.');
           }
@@ -129,7 +127,6 @@ class DataVO {
           userName: doc['userName'],
         );
       }).toList();
-      logger.d(feedData[0].toString());
       print('피드 데이터 성공적으로 가져옴.');
     } catch (e) {
       print('피드 데이터 가져오는 중 오류 발생: $e');
