@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -124,39 +122,7 @@ class _FeedGeneratorState extends State<FeedGenerator> {
     }
   }
 
-  // 친구를 추가하는 함수
-  // Future<void> addFriendByName(String friendName) async {
-  //   try {
-  //     User? user = _auth.currentUser;
-  //
-  //     if (user != null) {
-  //       // 이름으로 해당 사용자를 찾음
-  //       QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
-  //           .collection('users')
-  //           .where('name', isEqualTo: friendName)
-  //           .get();
-  //
-  //       if (querySnapshot.docs.isNotEmpty) {
-  //         // 찾은 사용자의 UID를 가져와서 친구 목록에 추가
-  //         String friendUid = querySnapshot.docs.first.id;
-  //         await _firestore.collection('users').doc(user.uid).update({
-  //           'friends': FieldValue.arrayUnion([friendUid]),
-  //         });
-  //
-  //         // 친구에게도 나를 친구로 등록
-  //         await _firestore.collection('users').doc(friendUid).update({
-  //           'friends': FieldValue.arrayUnion([user.uid]),
-  //         });
-  //
-  //         logger.d('Friend added successfully.');
-  //       } else {
-  //         logger.d('User with name $friendName not found.');
-  //       }
-  //     }
-  //   } catch (e) {
-  //     logger.d('Error adding friend: $e');
-  //   }
-  // }
+
 
   // _pickImage 함수를 수정하여 XFile을 반환하도록 수정
   Future<void> _pickImage() async {

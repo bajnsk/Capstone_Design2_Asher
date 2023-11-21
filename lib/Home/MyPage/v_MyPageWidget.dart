@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
-
 import '../../DB/feed_generator.dart';
 import '../Feed/v_DetailPageWidget.dart';
 import 'package:capstone/Home/MyPage/v_MyPageAddFriendPopup.dart';

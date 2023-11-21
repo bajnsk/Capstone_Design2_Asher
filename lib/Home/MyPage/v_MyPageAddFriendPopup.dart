@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:capstone/DB/friends_generator.dart';
 
 class MyPageAddFriendPopup extends StatefulWidget {
   const MyPageAddFriendPopup({super.key});
@@ -9,8 +11,25 @@ class MyPageAddFriendPopup extends StatefulWidget {
 
 class _MyPagePopupState extends State<MyPageAddFriendPopup> {
   TextEditingController _usernameController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  FriendController _friendController = FriendController();
+  late String uid;
 
   @override
+  void initState(){
+    super.initState();
+    getUserUid();
+  }
+
+  Future<void> getUserUid() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      setState(() {
+        uid = user.uid;
+      });
+    }
+  }
+
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Add Friend',
@@ -44,7 +63,7 @@ class _MyPagePopupState extends State<MyPageAddFriendPopup> {
             ),
             SizedBox(height: 20,),
             SelectableText(
-              'asdhfjk',
+              uid,
               style: TextStyle(
                 fontSize: 16
               ),
@@ -66,8 +85,9 @@ class _MyPagePopupState extends State<MyPageAddFriendPopup> {
         TextButton(
           onPressed: () {
             // Handle the username update logic here
-            String newUsername = _usernameController.text;
+            _friendController.addFriendByName(_usernameController.text);
             // Perform the update logic
+
 
             Navigator.of(context).pop(); // Close the dialog
           },
