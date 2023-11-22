@@ -133,12 +133,30 @@ class DataVO {
     }
   }
 
+  void updateLikeFeedData() {
+    // 'likeFeedData'를 초기화하고 'myUserData'의 'likeFeed'에 있는 피드 ID들로 업데이트
+    likeFeedData.clear();
+    for (var likeFeedId in myUserData.likeFeed) {
+      try {
+        // 'likeFeedId'에 해당하는 피드를 찾아서 'likeFeedData'에 추가
+        FeedDataVO feedItem = feedData.firstWhere(
+          (feed) => feed.feedId == likeFeedId,
+        );
+        likeFeedData.add(feedItem);
+      } catch (e) {
+        // 해당 피드 ID를 가진 피드를 찾지 못한 경우 처리
+        print('FeedData with feedId $likeFeedId not found.');
+      }
+    }
+  }
+
   void init() async {
     try {
       // 로그인 후 불러 와야할 데이터 모델들을 정의
       // 사용자 인증 => DataVO 인스턴스 초기화 후 fetchData 호출 해야 함
       await fetchUserData();
       await fetchFeedData();
+      updateLikeFeedData();
     } catch (e) {
       // 에러 처리
       print('데이터 초기화 중 오류 발생: $e');
@@ -150,6 +168,6 @@ class DataVO {
   static late UserDataVO myUserData;
   // 전체 Feed data 리스트 화 => DB에서 받아오기
   static List<FeedDataVO> feedData = [];
-
+  static List<FeedDataVO> likeFeedData = [];
   // 나와 연관된 내 피드 정보, 관심 피드 정보, 나한테 팔로우 된 피드 정보 가공하기
 }

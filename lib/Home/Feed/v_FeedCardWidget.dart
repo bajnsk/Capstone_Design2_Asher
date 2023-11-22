@@ -22,7 +22,22 @@ class FeedCardWidget extends StatefulWidget {
 }
 
 class _FeedCardState extends State<FeedCardWidget> {
-  bool isFavorite = false;
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    FeedDataVO feedData = widget.FollowedFeeds[widget.index];
+
+    // 현재 feedData의 ID가 DataVO.myUserData.likeFeeds에 있는지 확인
+    isFavorite = DataVO.myUserData.likeFeed.contains(feedData.feedId);
+
+    // 피드 페이지 초기에 해당 피드 ID가 myUserData의 likefeed에 값으로 들어가 있을 경우
+    // isFavorite이 활성화되도록 추가 로직
+    if (isFavorite) {
+      // Add your additional logic here
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,11 +188,21 @@ class _FeedCardState extends State<FeedCardWidget> {
                 Row(
                   children: [
                     LikeButton(
-                      isLiked: isFavorite, // Pass the liked state
+                      isLiked: isFavorite,
                       onTap: (bool isLiked) {
                         // 하트 버튼을 눌렀을 때
                         setState(() {
                           isFavorite = !isFavorite;
+                          // DataVO.myUserData.likeFeeds 업데이트
+                          if (isFavorite) {
+                            DataVO.myUserData.likeFeed.add(feedData.feedId);
+                            FeedTypeController.instance
+                                .likeFeedToFirebase(feedData);
+                          } else {
+                            DataVO.myUserData.likeFeed.remove(feedData.feedId);
+                            FeedTypeController.instance
+                                .unlikeFeedFromFirebase(feedData);
+                          }
                         });
                         return Future.value(!isLiked);
                       },
