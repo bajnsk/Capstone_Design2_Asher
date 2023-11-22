@@ -3,6 +3,7 @@ import 'package:capstone/Home/Feed/v_DetailPageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 import 'package:capstone/main.dart';
+import 'package:like_button/like_button.dart';
 
 class FeedCardWidget extends StatefulWidget {
   final List<FeedDataVO> FollowedFeeds;
@@ -171,14 +172,21 @@ class _FeedCardState extends State<FeedCardWidget> {
               children: [
                 Row(
                   children: [
-                    InkWell(
-                      onTap: () {
-                        // Add the action for the favorite icon
+                    LikeButton(
+                      isLiked: isFavorite, // Pass the liked state
+                      onTap: (bool isLiked) {
+                        // 하트 버튼을 눌렀을 때
+                        setState(() {
+                          isFavorite = !isFavorite;
+                        });
+                        return Future.value(!isLiked);
                       },
-                      child: Padding(
-                        padding: EdgeInsets.all(3.0),
-                        child: Icon(Icons.favorite_border),
-                      ),
+                      likeBuilder: (bool isLiked) {
+                        return Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border,
+                          color: isLiked ? Colors.red : Colors.grey,
+                        );
+                      },
                     ),
                     InkWell(
                       onTap: () {

@@ -55,6 +55,7 @@ dependencies:
   logger: ^2.0.2+1
   provider: ^6.0.5
   http: ^0.13.3
+  like_button: ^2.0.5
 
 dev_dependencies:
   flutter_test:

@@ -69,16 +69,19 @@ class FeedPageState extends State<FeedsView> {
             index: index,
           );
         } else if (allFeedsChecked) {
+          // 모든 데이터를 로드한 경우 특정 위젯을 표시
           return AllFeedsCheckedWidget();
-        } else {
+        } else if (!allFeedsChecked && index == items.length - 1) {
           // 로딩 중에는 디자인된 CircularProgressIndicator를 표시
           return Center(
             child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-              // 원하는 색상으로 변경
-              strokeWidth: 4, // 선의 두께 조절
+              strokeWidth: 4,
             ),
           );
+        } else {
+          // 더 이상 아이템이 없으면 빈 컨테이너를 반환하거나 다른 로딩 상태를 표시할 수 있습니다.
+          return Container();
         }
       },
     );
