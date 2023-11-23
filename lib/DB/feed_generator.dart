@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'dart:typed_data';
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -80,32 +79,6 @@ class _FeedGeneratorState extends State<FeedGenerator> {
     }).toList();
   }
 
-  // Uint8List를 파일로 변환하는 함수
-  Future<io.File> _createTempFile(List<String> imagePaths) async {
-    List<Uint8List> imageBytesList = [];
-
-    for (String imagePath in imagePaths) {
-      io.File file = io.File(imagePath);
-      List<int> bytes = await file.readAsBytes();
-      Uint8List uint8List = Uint8List.fromList(bytes);
-      imageBytesList.add(uint8List);
-    }
-
-    Uint8List combinedImageBytes = imageBytesList.isNotEmpty ? imageBytesList[0] : Uint8List(0);
-
-    final tempDir = await io.Directory.systemTemp;
-    final tempFile = io.File('${tempDir.path}/temp_image.png');
-    await tempFile.writeAsBytes(combinedImageBytes);
-    return tempFile;
-  }
-
-  Future<XFile?> pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-
-    return image;
-  }
-
   // 데이터를 Firestore에 추가하는 함수
   Future<void> _addFeedToFirestore(
       String contentText, List<String> imagePaths, String tag,
@@ -179,44 +152,6 @@ class _FeedGeneratorState extends State<FeedGenerator> {
     }
   }
 
-  // uploadImageToFirebaseStorage 함수의 매개변수를 XFile에서 io.File로 변경
-  Future<void> uploadImageToFirebaseStorage(io.File file) async {
-    try {
-      // 파일 이름을 UUID로 생성하고 확장자를 .jpg로 설정
-      String fileName = Uuid().v4() + '.jpg';
-
-      Reference firebaseStorageRef =
-      FirebaseStorage.instance.ref().child(fileName);
-
-      // 파일의 MIME 타입을 명시적으로 지정
-      String mimeType = 'image/jpeg';
-      SettableMetadata metadata = SettableMetadata(contentType: mimeType);
-
-      UploadTask uploadTask = firebaseStorageRef.putFile(file, metadata);
-
-      TaskSnapshot taskSnapshot = await uploadTask;
-      logger.d('Image uploaded to Firebase Storage: ${taskSnapshot.ref}');
-    } catch (e) {
-      logger.d('Error uploading image to Firebase Storage: $e');
-    }
-  }
-
-  // 이미지 URL을 Uint8List로 변환하는 함수
-  // Future<Uint8List> _loadImageFromUrl(String imageUrl) async {
-  //   if (imageUrl.startsWith('http')) {
-  //     final response = await http.get(Uri.parse(imageUrl));
-  //     if (response.statusCode == 200) {
-  //       return Uint8List.fromList(response.bodyBytes);
-  //     } else {
-  //       throw Exception('이미지 로드 실패');
-  //     }
-  //   } else {
-  //     // AssetImage를 사용하여 로컬 이미지 불러오기
-  //     final ByteData data = await rootBundle.load(imageUrl);
-  //     return data.buffer.asUint8List();
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -252,7 +187,7 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                           onTap: () async {
                             final images = await selectImages();
                             setState(() {
-                              _files.addAll(images);
+                              _files.addAll(images.where((imagePath) => !_files.contains(imagePath)));
                             });
                           },
                           child: Container(
@@ -345,11 +280,6 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                     if (_files.isNotEmpty) {
                       FocusScope.of(context).unfocus();
                       // 이미지가 선택되었을 때만 피드 저장
-                      // 이미지 파일의 경로를 얻어 Firebase Storage에 업로드
-
-                      // 임시 파일 생성
-                      io.File file = await _createTempFile(_files);
-                      await uploadImageToFirebaseStorage(file);
                       // 텍스트 필드에서 얻은 내용을 Firestore에 추가
                       await _addFeedToFirestore(
                         _contentController.text,
