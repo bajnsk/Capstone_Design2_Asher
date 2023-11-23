@@ -73,4 +73,17 @@ class FeedTypeController {
       print('피드를 좋아요 목록에서 제거하는 중 오류 발생: $e');
     }
   }
+
+  bool reversalLike(FeedDataVO feedData, bool isFavorite) {
+    // DataVO.myUserData.likeFeeds 업데이트
+    if (isFavorite) {
+      DataVO.myUserData.likeFeed.add(feedData.feedId);
+      FeedTypeController.instance.likeFeedToFirebase(feedData);
+      return isFavorite;
+    } else {
+      DataVO.myUserData.likeFeed.remove(feedData.feedId);
+      FeedTypeController.instance.unlikeFeedFromFirebase(feedData);
+      return isFavorite;
+    }
+  }
 }

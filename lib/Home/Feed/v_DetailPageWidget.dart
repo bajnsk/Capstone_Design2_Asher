@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:like_button/like_button.dart';
 import '../../DataVO/model.dart';
 import '../../main.dart';
@@ -157,21 +158,8 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                           // 하트 버튼을 눌렀을 때
                           setState(() {
                             isFavorite = !isFavorite;
-                            // DataVO.myUserData.likeFeeds 업데이트
-                            if (isFavorite) {
-                              DataVO.myUserData.likeFeed.add(feedData.feedId);
-                              FeedTypeController.instance
-                                  .likeFeedToFirebase(feedData);
-                              print('adfsaf11111');
-                              print(DataVO.myUserData.likeFeed);
-                            } else {
-                              DataVO.myUserData.likeFeed
-                                  .remove(feedData.feedId);
-                              FeedTypeController.instance
-                                  .unlikeFeedFromFirebase(feedData);
-                              print('adfsaf11111');
-                              print(DataVO.myUserData.likeFeed);
-                            }
+                            FeedTypeController.instance
+                                .reversalLike(feedData, isFavorite);
                           });
                           return Future.value(!isLiked);
                         },
