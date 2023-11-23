@@ -3,6 +3,7 @@ import 'package:capstone/DataVO/model.dart';
 import '../../DB/feed_generator.dart';
 import '../Feed/v_DetailPageWidget.dart';
 import 'package:capstone/Home/MyPage/v_MyPageAddFriendPopup.dart';
+import 'package:capstone/Home/MyPage/v_MyPageFriendList.dart';
 
 class MyPageWidget extends StatefulWidget {
   final List<FeedDataVO> myFeedsList;
@@ -189,7 +190,18 @@ class _MyPageViewState extends State<MyPageWidget>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _statisticsOne(DataVO.myUserData.friend.length, 'Friends'),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyPageFriendList(
+                              ),
+                            ),
+                          );
+                        },
+                        child: _statisticsOne(DataVO.myUserData.friend.length, 'Friends')
+                    ),
                     _statisticsOne(DataVO.myUserData.myFeed.length, 'Feeds'),
                     _statisticsOne(DataVO.myUserData.likeFeed.length, 'Likes'),
                   ],
