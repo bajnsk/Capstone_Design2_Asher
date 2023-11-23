@@ -8,10 +8,10 @@ class FeedsView extends StatefulWidget {
   const FeedsView({Key? key}) : super(key: key);
 
   @override
-  State<FeedsView> createState() => FeedPageState();
+  State<FeedsView> createState() => _FeedPageState();
 }
 
-class FeedPageState extends State<FeedsView> {
+class _FeedPageState extends State<FeedsView> {
   late ScrollController _scrollController;
   late List<int> items;
   late int index;

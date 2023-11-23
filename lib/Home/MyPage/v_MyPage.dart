@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../main.dart';
 import 'c_MyPageController.dart';
 import 'v_MyPageWidget.dart';
 import 'package:capstone/DataVO/model.dart';
@@ -12,7 +13,7 @@ class MyPageView extends StatefulWidget {
 
 class MyPageWidgetState extends State<MyPageView> {
   late List<FeedDataVO> MyFeedsList = MyController.myFeedsList;
-  late List<FeedDataVO> iLikeFeedsList = MyController.myFeedsList;
+  late List<FeedDataVO> LikeFeedsList = MyController.iLikeFeedsList;
   late int index = 0; // index를 초기화
 
   @override
@@ -22,6 +23,7 @@ class MyPageWidgetState extends State<MyPageView> {
       MyController.myFeedsList = await MyController.getMyFeedsList();
       MyFeedsList = await MyController.myFeedsList;
       MyController.iLikeFeedsList = await MyController.getMyFeedsList();
+      LikeFeedsList = await MyController.iLikeFeedsList;
       setState(() {});
     });
   }
@@ -40,6 +42,9 @@ class MyPageWidgetState extends State<MyPageView> {
 
     FeedDataVO feedData = MyFeedsList[index]; // 수정된 부분
     return MyPageWidget(
-        MyFeedsList: MyFeedsList, feedData: feedData, index: index);
+        myFeedsList: MyFeedsList,
+        likeFeedsList: LikeFeedsList,
+        feedData: feedData,
+        index: index);
   }
 }

@@ -5,6 +5,7 @@ class MyController {
   static List<FeedDataVO> myFeedsList = [];
   static List<FeedDataVO> iLikeFeedsList = [];
 
+  // 내 피드 불러오기
   static Future<List<FeedDataVO>> getMyFeedsList() async {
     // 현재 로그인한 유저의 피드 ID 목록
     late List<dynamic> myFeedIds = DataVO.myUserData.myFeed;
@@ -29,6 +30,7 @@ class MyController {
         .toList();
   }
 
+  // 내가 좋아요한 피드 불러오기
   static Future<List<FeedDataVO>> getiLikeFeedsList() async {
     // 현재 로그인한 유저의 피드 ID 목록
     late List<dynamic> iLikeFeedIds = DataVO.myUserData.likeFeed;
@@ -39,10 +41,6 @@ class MyController {
 
     // 피드를 날짜 기준으로 정렬
     iLikeFeedsList.sort((a, b) => b.makeTime.compareTo(a.makeTime));
-    for (FeedDataVO f in iLikeFeedsList) {
-      print(f.feedId);
-    }
-    logger.d(iLikeFeedsList);
 
     return iLikeFeedsList;
   }

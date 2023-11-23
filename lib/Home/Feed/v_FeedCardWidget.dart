@@ -18,25 +18,19 @@ class FeedCardWidget extends StatefulWidget {
   });
 
   @override
-  State<FeedCardWidget> createState() => _FeedCardState();
+  State<FeedCardWidget> createState() => FeedCardState();
 }
 
-class _FeedCardState extends State<FeedCardWidget> {
+class FeedCardState extends State<FeedCardWidget> {
   late bool isFavorite;
 
   @override
   void initState() {
     super.initState();
-    FeedDataVO feedData = widget.FollowedFeeds[widget.index];
-
-    // 현재 feedData의 ID가 DataVO.myUserData.likeFeeds에 있는지 확인
-    isFavorite = DataVO.myUserData.likeFeed.contains(feedData.feedId);
-
-    // 피드 페이지 초기에 해당 피드 ID가 myUserData의 likefeed에 값으로 들어가 있을 경우
-    // isFavorite이 활성화되도록 추가 로직
-    if (isFavorite) {
-      // Add your additional logic here
-    }
+    setState(() {
+      FeedDataVO feedData = widget.FollowedFeeds[widget.index];
+      isFavorite = DataVO.myUserData.likeFeed.contains(feedData.feedId);
+    });
   }
 
   @override
@@ -99,15 +93,21 @@ class _FeedCardState extends State<FeedCardWidget> {
           ),
           // 사진 컨테이너
           GestureDetector(
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              var returnedValue = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => DetailPageWidget(
                     feedData: feedData,
+                    isFavorite: isFavorite,
                   ),
                 ),
               );
+              if (returnedValue != null && returnedValue is bool) {
+                setState(() {
+                  isFavorite = returnedValue;
+                });
+              }
             },
             child: Container(
               height: 250,
@@ -135,15 +135,21 @@ class _FeedCardState extends State<FeedCardWidget> {
           ),
           // 본문 컨테이너
           GestureDetector(
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              var returnedValue = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => DetailPageWidget(
                     feedData: feedData,
+                    isFavorite: isFavorite,
                   ),
                 ),
               );
+              if (returnedValue != null && returnedValue is bool) {
+                setState(() {
+                  isFavorite = returnedValue;
+                });
+              }
             },
             child: Container(
               width: MediaQuery.of(context).size.width - 100,

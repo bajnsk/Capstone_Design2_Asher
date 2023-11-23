@@ -1,19 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:like_button/like_button.dart';
 import '../../DataVO/model.dart';
 import '../../main.dart';
 import 'c_FeedPageController.dart';
 
 class DetailPageWidget extends StatefulWidget {
   final FeedDataVO feedData;
+  final bool isFavorite;
 
-  DetailPageWidget({super.key, required this.feedData});
+  DetailPageWidget({
+    super.key,
+    required this.feedData,
+    required this.isFavorite,
+  });
 
   @override
   State<DetailPageWidget> createState() => _DetailPageWidgetState();
 }
 
 class _DetailPageWidgetState extends State<DetailPageWidget> {
-  bool isFavorite = false;
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    // 전달받은 isFavorite 값으로 초기화합니다.
+    isFavorite = DataVO.myUserData.likeFeed.contains(widget.feedData.feedId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +40,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(isFavorite);
           },
         ),
       ),
@@ -138,14 +151,36 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                 children: [
                   Row(
                     children: [
-                      InkWell(
-                        onTap: () {
-                          // Add the action for the favorite icon
+                      LikeButton(
+                        isLiked: isFavorite,
+                        onTap: (bool isLiked) {
+                          // 하트 버튼을 눌렀을 때
+                          setState(() {
+                            isFavorite = !isFavorite;
+                            // DataVO.myUserData.likeFeeds 업데이트
+                            if (isFavorite) {
+                              DataVO.myUserData.likeFeed.add(feedData.feedId);
+                              FeedTypeController.instance
+                                  .likeFeedToFirebase(feedData);
+                              print('adfsaf11111');
+                              print(DataVO.myUserData.likeFeed);
+                            } else {
+                              DataVO.myUserData.likeFeed
+                                  .remove(feedData.feedId);
+                              FeedTypeController.instance
+                                  .unlikeFeedFromFirebase(feedData);
+                              print('adfsaf11111');
+                              print(DataVO.myUserData.likeFeed);
+                            }
+                          });
+                          return Future.value(!isLiked);
                         },
-                        child: Padding(
-                          padding: EdgeInsets.all(3.0),
-                          child: Icon(Icons.favorite_border),
-                        ),
+                        likeBuilder: (bool isLiked) {
+                          return Icon(
+                            isLiked ? Icons.favorite : Icons.favorite_border,
+                            color: isLiked ? Colors.red : Colors.grey,
+                          );
+                        },
                       ),
                       InkWell(
                         onTap: () {
