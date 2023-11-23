@@ -5,17 +5,17 @@ import '../Feed/v_DetailPageWidget.dart';
 import 'package:capstone/Home/MyPage/v_MyPageAddFriendPopup.dart';
 
 class MyPageWidget extends StatefulWidget {
-  final List<FeedDataVO> myFeedsList;
+  final List<FeedDataVO> MyFeedsList;
   final List<FeedDataVO> likeFeedsList;
   final FeedDataVO feedData;
   final int index;
-
-  MyPageWidget(
-      {super.key,
-      required this.myFeedsList,
-      required this.likeFeedsList,
-      required this.feedData,
-      required this.index});
+  MyPageWidget({
+    super.key,
+    required this.MyFeedsList,
+    required this.feedData,
+    required this.index,
+    required this.likeFeedsList,
+  });
   @override
   State<MyPageWidget> createState() => _MyPageViewState();
 }
@@ -24,6 +24,7 @@ class _MyPageViewState extends State<MyPageWidget>
     with TickerProviderStateMixin {
   late TabController tabController;
   TextEditingController _controller = TextEditingController();
+  late bool isFavorite;
 
   @override
   void initState() {
@@ -115,7 +116,7 @@ class _MyPageViewState extends State<MyPageWidget>
 
   // 사용자 정보 위젯
   Widget _information() {
-    FeedDataVO feedData = widget.myFeedsList[widget.index];
+    FeedDataVO feedData = widget.MyFeedsList[widget.index];
     return Padding(
       padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
       child: Container(
@@ -227,33 +228,11 @@ class _MyPageViewState extends State<MyPageWidget>
   }
 
   //탭뷰 위젯
-// 탭뷰 위젯
   Widget _tabview() {
-    return Expanded(
-      child: TabBarView(
-        controller: tabController,
-        children: [
-          _buildTabContent(0), // 첫 번째 탭
-          _buildTabContent(1), // 두 번째 탭
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTabContent(int tabIndex) {
-    if (tabIndex == 0) {
-      return _buildGridView(widget.myFeedsList);
-    } else if (tabIndex == 1) {
-      return _buildGridView(widget.likeFeedsList);
-    }
-    return Container(); // 예외 처리: 추가적인 탭이 있을 경우 빈 컨테이너 반환
-  }
-
-  Widget _buildGridView(List<FeedDataVO> feedsList) {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: feedsList.length,
+      itemCount: widget.MyFeedsList.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         childAspectRatio: 1,
@@ -261,7 +240,7 @@ class _MyPageViewState extends State<MyPageWidget>
         crossAxisSpacing: 1,
       ),
       itemBuilder: (BuildContext context, int index) {
-        FeedDataVO feedData = feedsList[index];
+        FeedDataVO feedData = widget.MyFeedsList[index];
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -269,7 +248,7 @@ class _MyPageViewState extends State<MyPageWidget>
               MaterialPageRoute(
                 builder: (context) => DetailPageWidget(
                   feedData: feedData,
-                  isFavorite: false,
+                  isFavorite: isFavorite,
                 ),
               ),
             ); // 눌렀을 때 작동할 코드 추가

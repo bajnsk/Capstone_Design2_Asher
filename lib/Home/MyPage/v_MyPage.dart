@@ -22,7 +22,7 @@ class MyPageWidgetState extends State<MyPageView> {
     Future.delayed(Duration(seconds: 1), () async {
       MyController.myFeedsList = await MyController.getMyFeedsList();
       MyFeedsList = await MyController.myFeedsList;
-      MyController.iLikeFeedsList = await MyController.getMyFeedsList();
+      MyController.iLikeFeedsList = await MyController.getiLikeFeedsList();
       LikeFeedsList = await MyController.iLikeFeedsList;
       setState(() {});
     });
@@ -42,9 +42,10 @@ class MyPageWidgetState extends State<MyPageView> {
 
     FeedDataVO feedData = MyFeedsList[index]; // 수정된 부분
     return MyPageWidget(
-        myFeedsList: MyFeedsList,
-        likeFeedsList: LikeFeedsList,
-        feedData: feedData,
-        index: index);
+      MyFeedsList: MyFeedsList,
+      likeFeedsList: LikeFeedsList,
+      feedData: feedData,
+      index: index,
+    );
   }
 }
