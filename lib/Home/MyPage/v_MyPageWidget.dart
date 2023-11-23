@@ -5,13 +5,13 @@ import '../Feed/v_DetailPageWidget.dart';
 import 'package:capstone/Home/MyPage/v_MyPageAddFriendPopup.dart';
 
 class MyPageWidget extends StatefulWidget {
-  final List<FeedDataVO> MyFeedsList;
+  final List<FeedDataVO> myFeedsList;
   final List<FeedDataVO> likeFeedsList;
   final FeedDataVO feedData;
   final int index;
   MyPageWidget({
     super.key,
-    required this.MyFeedsList,
+    required this.myFeedsList,
     required this.feedData,
     required this.index,
     required this.likeFeedsList,
@@ -116,7 +116,7 @@ class _MyPageViewState extends State<MyPageWidget>
 
   // 사용자 정보 위젯
   Widget _information() {
-    FeedDataVO feedData = widget.MyFeedsList[widget.index];
+    FeedDataVO feedData = widget.myFeedsList[widget.index];
     return Padding(
       padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
       child: Container(
@@ -229,10 +229,48 @@ class _MyPageViewState extends State<MyPageWidget>
 
   //탭뷰 위젯
   Widget _tabview() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 1200, // 원하는 높이로 조절
+          child: TabBarView(
+            controller: tabController,
+            children: [
+              _tabViewForMyFeeds(),
+              _tabViewForLikeFeeds(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: _information(),
+        ),
+        SliverToBoxAdapter(
+          child: _editprofile(),
+        ),
+        SliverToBoxAdapter(
+          child: _tabmenu(),
+        ),
+        SliverToBoxAdapter(
+          child: _tabview(),
+        ),
+      ],
+    );
+  }
+
+  Widget _tabViewForMyFeeds() {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: widget.MyFeedsList.length,
+      itemCount: widget.myFeedsList.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         childAspectRatio: 1,
@@ -240,7 +278,7 @@ class _MyPageViewState extends State<MyPageWidget>
         crossAxisSpacing: 1,
       ),
       itemBuilder: (BuildContext context, int index) {
-        FeedDataVO feedData = widget.MyFeedsList[index];
+        FeedDataVO feedData = widget.myFeedsList[index];
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -248,10 +286,10 @@ class _MyPageViewState extends State<MyPageWidget>
               MaterialPageRoute(
                 builder: (context) => DetailPageWidget(
                   feedData: feedData,
-                  isFavorite: isFavorite,
+                  isFavorite: false,
                 ),
               ),
-            ); // 눌렀을 때 작동할 코드 추가
+            );
           },
           child: Container(
             child: ClipRRect(
@@ -263,17 +301,38 @@ class _MyPageViewState extends State<MyPageWidget>
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          _information(),
-          _editprofile(),
-          _tabmenu(),
-          _tabview(),
-        ],
+  Widget _tabViewForLikeFeeds() {
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: widget.likeFeedsList.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 1,
+        mainAxisSpacing: 1,
+        crossAxisSpacing: 1,
       ),
+      itemBuilder: (BuildContext context, int index) {
+        FeedDataVO feedData = widget.likeFeedsList[index];
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailPageWidget(
+                  feedData: feedData,
+                  isFavorite: true,
+                ),
+              ),
+            );
+          },
+          child: Container(
+            child: ClipRRect(
+              child: Image.network(feedData.image[0]),
+            ),
+          ),
+        );
+      },
     );
   }
 }

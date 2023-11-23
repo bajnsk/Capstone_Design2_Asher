@@ -42,7 +42,7 @@ class MyPageWidgetState extends State<MyPageView> {
 
     FeedDataVO feedData = MyFeedsList[index]; // 수정된 부분
     return MyPageWidget(
-      MyFeedsList: MyFeedsList,
+      myFeedsList: MyFeedsList,
       likeFeedsList: LikeFeedsList,
       feedData: feedData,
       index: index,
