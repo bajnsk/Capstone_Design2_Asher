@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class MyPageEditProfilePopup extends StatefulWidget {
   const MyPageEditProfilePopup({super.key});
@@ -9,6 +14,39 @@ class MyPageEditProfilePopup extends StatefulWidget {
 }
 
 class _MyPageEditProfilePopupState extends State<MyPageEditProfilePopup> {
+  File? _imageFile;
+
+  // 이미지 선택
+  Future<void> pickImage() async {
+    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  // 이미지를 Firebase Storage에 업로드
+  Future<void> uploadProfileImage(File imageFile) async {
+    Reference firebaseStorageRef =
+    FirebaseStorage.instance.ref().child('user_profile_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+    UploadTask uploadTask = firebaseStorageRef.putFile(imageFile);
+
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String imageUrl = await taskSnapshot.ref.getDownloadURL();
+
+    // 사용자 문서 업데이트
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({'profileImage': imageUrl});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -36,8 +74,8 @@ class _MyPageEditProfilePopupState extends State<MyPageEditProfilePopup> {
                   top: 70,
                   right: 90,
                   child: IconButton(
-                    onPressed: () {
-                      //작동할 것 추가
+                    onPressed: () async {
+                      await pickImage(); // 이미지 선택
                     },
                     icon: Icon(
                         Icons.add_a_photo_outlined
@@ -85,10 +123,12 @@ class _MyPageEditProfilePopupState extends State<MyPageEditProfilePopup> {
           ),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             // Handle the username update logic here
             // Perform the update logic
-
+            if (_imageFile != null) {
+              await uploadProfileImage(_imageFile!);
+            }
 
             Navigator.of(context).pop(); // Close the dialog
           },
