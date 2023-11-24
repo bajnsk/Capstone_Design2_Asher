@@ -79,18 +79,26 @@ class _FeedGeneratorState extends State<FeedGenerator> {
 
   // 데이터를 Firestore에 추가하는 함수
   Future<void> _addFeedToFirestore(
-      String contentText, List<String> imagePaths, String tag,
-      ) async {
+    String contentText,
+    List<String> imagePaths,
+    String tagText,
+  ) async {
     try {
       User? user = _auth.currentUser;
 
       if (user != null) {
         // uid를 사용해 users 컬렉션 탐색
         DocumentSnapshot userDoc =
-        await _firestore.collection('users').doc(user.uid).get();
+            await _firestore.collection('users').doc(user.uid).get();
 
         if (userDoc.exists) {
           String userName = userDoc['name'];
+          // 태그 #으로 배열화
+          List<String> tags = tagText
+              .split('#')
+              .where((tag) => tag.trim().isNotEmpty)
+              .map((tag) => '#${tag.trim()}')
+              .toList();
 
           List<String> imageUrls = [];
 
@@ -99,7 +107,7 @@ class _FeedGeneratorState extends State<FeedGenerator> {
             String fileName = Uuid().v4() + '.jpg';
 
             Reference firebaseStorageRef =
-            FirebaseStorage.instance.ref().child(fileName);
+                FirebaseStorage.instance.ref().child(fileName);
 
             // 파일의 MIME 타입을 명시적으로 지정
             String mimeType = 'image/jpeg';
@@ -107,7 +115,7 @@ class _FeedGeneratorState extends State<FeedGenerator> {
 
             // 이미지를 Firebase Storage에 업로드
             UploadTask uploadTask =
-            firebaseStorageRef.putFile(io.File(imagePath), metadata);
+                firebaseStorageRef.putFile(io.File(imagePath), metadata);
 
             TaskSnapshot taskSnapshot = await uploadTask;
             logger.d('Image uploaded to Firebase Storage: ${taskSnapshot.ref}');
@@ -119,13 +127,13 @@ class _FeedGeneratorState extends State<FeedGenerator> {
 
           // Firestore에 피드 추가
           DocumentReference<Map<String, dynamic>> docRef =
-          await _firestore.collection('feeds').add({
+              await _firestore.collection('feeds').add({
             'makeTime': DateTime.now(),
             'content_text': contentText,
             'userId': user.uid,
             'reContentId': null,
             'image': imageUrls.isNotEmpty ? imageUrls : [],
-            'tag': [tag],
+            'tag': tags,
             'userName': userName,
           });
 
@@ -185,7 +193,8 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                           onTap: () async {
                             final images = await selectImages();
                             setState(() {
-                              _files.addAll(images.where((imagePath) => !_files.contains(imagePath)));
+                              _files.addAll(images.where(
+                                  (imagePath) => !_files.contains(imagePath)));
                             });
                           },
                           child: Container(
@@ -296,7 +305,7 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.grey[300]!),
+                        MaterialStateProperty.all<Color>(Colors.grey[300]!),
                   ),
                   child: Text(
                     'Upload Feed',
