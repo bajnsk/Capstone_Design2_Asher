@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,7 +16,6 @@ class FeedGenerator extends StatefulWidget {
 
 class _FeedGeneratorState extends State<FeedGenerator> {
   final TextEditingController _contentController = TextEditingController();
-  // final TextEditingController _friendNameController = TextEditingController();
   final TextEditingController _tagController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isUploading = false;
@@ -42,13 +40,13 @@ class _FeedGeneratorState extends State<FeedGenerator> {
         padding: const EdgeInsets.only(left: 10),
         child: Stack(children: [
           ClipRRect(
+            borderRadius: BorderRadius.circular(5),
             child: Image.file(
               io.File(data),
               fit: BoxFit.cover,
               height: MediaQuery.of(context).size.height * 0.4,
               width: 200,
             ),
-            borderRadius: BorderRadius.circular(5),
           ),
           Positioned(
             top: 10,
@@ -291,8 +289,9 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                       );
                     } else {
                       // 이미지가 선택되지 않은 경우에 대한 처리
-                      print(
-                          'Please select an image before adding feed to Firestore.');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('이미지를 선택해주세요')),
+                      );
                     }
                   },
                   style: ButtonStyle(
