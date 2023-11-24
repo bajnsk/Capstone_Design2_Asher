@@ -1,3 +1,4 @@
+import 'package:capstone/Home/MyPage/v_MyPageEditProfilePopup.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 import '../../DB/feed_generator.dart';
@@ -66,6 +67,12 @@ class _MyPageViewState extends State<MyPageWidget>
             child: InkWell(
               onTap: () {
                 //누를 시 수행할 작업 추가
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return MyPageEditProfilePopup(); // 위에서 정의한 팝업 위젯
+                  },
+                );
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 6),
