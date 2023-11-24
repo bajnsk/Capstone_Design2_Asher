@@ -21,6 +21,7 @@ class DetailPageWidget extends StatefulWidget {
 
 class _DetailPageWidgetState extends State<DetailPageWidget> {
   late bool isFavorite;
+  int currentPageIndex = 0;
 
   @override
   void initState() {
@@ -92,23 +93,46 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
               height: 300,
               width: MediaQuery.of(context).size.width,
               child: Center(
-                child: Container(
-                  margin: EdgeInsets.only(left: 50, right: 50, top: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.network(
-                      feedData.image.isNotEmpty && feedData.image.length > 0
-                          ? feedData.image[0]
-                          : 'https://firebasestorage.googleapis.com/v0/b/capstone2-1ad1d.appspot.com/o/smile%20pepe.png?alt=media&token=2240d1b9-b8cd-472a-81b8-d4f3be82335b',
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width - 100,
-                      height: 280,
+                child: Stack(alignment: Alignment.topRight, children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 50, right: 50, top: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: PageView.builder(
+                          itemCount: feedData.image.length,
+                          onPageChanged: (value) {
+                            setState(() {
+                              currentPageIndex = value;
+                            });
+                          },
+                          itemBuilder: (BuildContext context, int index) {
+                            return Image.network(
+                              feedData.image.isNotEmpty &&
+                                      feedData.image.length > 0
+                                  ? feedData.image[index]
+                                  : 'https://firebasestorage.googleapis.com/v0/b/capstone2-1ad1d.appspot.com/o/smile%20pepe.png?alt=media&token=2240d1b9-b8cd-472a-81b8-d4f3be82335b',
+                              fit: BoxFit.cover,
+                              width: MediaQuery.of(context).size.width - 100,
+                              height: 280,
+                            );
+                          }),
                     ),
                   ),
-                ),
+                  Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
+                      margin: const EdgeInsets.only(top: 20, right: 60),
+                      decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(500)),
+                      child: Text(
+                        '${currentPageIndex + 1}/${feedData.image.length}',
+                        style: TextStyle(color: Colors.white),
+                      )),
+                ]),
               ),
             ),
             // 본문 컨테이너
