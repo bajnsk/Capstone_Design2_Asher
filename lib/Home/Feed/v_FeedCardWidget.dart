@@ -1,5 +1,5 @@
 import 'package:capstone/Home/Feed/c_FeedPageController.dart';
-import 'package:capstone/Home/Feed/v_DetailPageWidget.dart';
+import 'package:capstone/Home/DetailPage/v_DetailPageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 import 'package:capstone/main.dart';

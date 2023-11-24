@@ -3,7 +3,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:like_button/like_button.dart';
 import '../../DataVO/model.dart';
 import '../../main.dart';
-import 'c_FeedPageController.dart';
+import '../Feed/c_FeedPageController.dart';
 
 class DetailPageWidget extends StatefulWidget {
   final FeedDataVO feedData;

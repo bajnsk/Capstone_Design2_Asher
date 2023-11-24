@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 import '../../DB/feed_generator.dart';
-import '../Feed/v_DetailPageWidget.dart';
+import '../DetailPage/v_DetailPageWidget.dart';
 import 'package:capstone/Home/MyPage/v_MyPageAddFriendPopup.dart';
 import 'package:capstone/Home/MyPage/v_MyPageFriendList.dart';
 
@@ -195,13 +195,12 @@ class _MyPageViewState extends State<MyPageWidget>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MyPageFriendList(
-                              ),
+                              builder: (context) => MyPageFriendList(),
                             ),
                           );
                         },
-                        child: _statisticsOne(DataVO.myUserData.friend.length, 'Friends')
-                    ),
+                        child: _statisticsOne(
+                            DataVO.myUserData.friend.length, 'Friends')),
                     _statisticsOne(DataVO.myUserData.myFeed.length, 'Feeds'),
                     _statisticsOne(DataVO.myUserData.likeFeed.length, 'Likes'),
                   ],
