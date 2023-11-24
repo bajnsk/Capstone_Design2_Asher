@@ -86,9 +86,9 @@ class _MyPageFriendListWidgetState extends State<MyPageFriendListWidget> {
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
-                      Icons.close,
+                      Icons.delete,
                       size: 40,
-                      color: Colors.red,
+                      color: Colors.black,
                     ),
                   ),
                 ),
