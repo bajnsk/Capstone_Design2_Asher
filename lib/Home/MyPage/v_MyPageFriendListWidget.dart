@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../DB/friends_generator.dart';
+
 class MyPageFriendListWidget extends StatefulWidget {
   const MyPageFriendListWidget({Key? key}) : super(key: key);
 
@@ -11,6 +13,17 @@ class MyPageFriendListWidget extends StatefulWidget {
 
 class _MyPageFriendListWidgetState extends State<MyPageFriendListWidget> {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  void _removeFriend(String friendUid) {
+    // FriendController 클래스에 있는 removeFriendByName 함수를 호출하여 친구를 삭제
+    FriendController().removeFriendByName(friendUid);
+
+    // 화면을 업데이트
+    setState(() {
+      // DataVO.myUserData.friend 리스트에서 삭제된 친구 UID를 제거
+      DataVO.myUserData.friend.remove(friendUid);
+    });
+  }
 
   Widget _listbox(String friendUid) {
     return FutureBuilder<DocumentSnapshot>(
@@ -74,10 +87,11 @@ class _MyPageFriendListWidgetState extends State<MyPageFriendListWidget> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 40),
+                padding: const EdgeInsets.only(left: 30),
                 child: InkWell(
                   onTap: () {
                     // 실행할 작업 추가
+                    _removeFriend(friendUid);
                   },
                   child: Container(
                     width: 60,
