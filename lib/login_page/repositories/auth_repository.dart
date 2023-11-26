@@ -72,8 +72,9 @@ class AuthRepository {
         'followedFeed': [],
         'friends': [],
         'feedId': [],
-        'profileImage': null,
+        'profileImage': 'https://firebasestorage.googleapis.com/v0/b/capstone2-1ad1d.appspot.com/o/icon-profile.png?alt=media&token=4cd1d2a6-de0b-4263-ad8a-a150394a956d',
         'tag': [],
+        'status_message' : '',
       });
 
       firebaseAuth.signOut();
