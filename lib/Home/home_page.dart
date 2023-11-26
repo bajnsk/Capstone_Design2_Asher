@@ -1,12 +1,9 @@
 import 'package:capstone/Appbar/v_appbar_widget.dart';
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
-
-import 'MainPage/main_page.dart';
 import 'MyPage/v_MyPage.dart';
 import 'TagPage/tag_page.dart';
-import 'Feed/v_FeedPage.dart';
+import 'FeedPage/v_FeedPage.dart';
 
 class MyApp extends StatelessWidget {
   @override

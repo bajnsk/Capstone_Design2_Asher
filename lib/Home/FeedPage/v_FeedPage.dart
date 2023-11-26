@@ -1,8 +1,8 @@
 import 'package:capstone/DataVO/model.dart';
 import 'package:flutter/material.dart';
-import 'package:capstone/Home/Feed/v_AllFeedCheckedWidget.dart';
+import 'package:capstone/Home/FeedPage/v_AllFeedCheckedWidget.dart';
 import 'v_FeedCardWidget.dart';
-import 'package:capstone/Home/Feed/c_FeedPageController.dart';
+import 'package:capstone/Home/FeedPage/c_FeedPageController.dart';
 
 class FeedsView extends StatefulWidget {
   const FeedsView({Key? key}) : super(key: key);
