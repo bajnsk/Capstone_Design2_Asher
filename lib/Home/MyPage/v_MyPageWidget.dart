@@ -6,11 +6,14 @@ import '../DetailPage/v_DetailPageWidget.dart';
 import 'package:capstone/Home/MyPage/v_MyPageAddFriendPopup.dart';
 import 'package:capstone/Home/MyPage/v_MyPageFriendList.dart';
 
+import 'c_MyPageController.dart';
+
 class MyPageWidget extends StatefulWidget {
   final List<FeedDataVO> myFeedsList;
   final List<FeedDataVO> likeFeedsList;
   final FeedDataVO feedData;
   final int index;
+
   MyPageWidget({
     super.key,
     required this.myFeedsList,
@@ -25,11 +28,22 @@ class MyPageWidget extends StatefulWidget {
 class _MyPageViewState extends State<MyPageWidget>
     with TickerProviderStateMixin {
   late TabController tabController;
-  TextEditingController _controller = TextEditingController();
+  // TextEditingController _controller = TextEditingController();
   late bool isFavorite;
+  late String imageURL;
+  late String userStatus;
+
+  Future<void> getUserImage() async {
+      imageURL = MyController.getUserProfileImage();
+  }
+  Future<void> getUserStatus() async {
+      userStatus = MyController.getUserStatusMessage();
+  }
 
   @override
   void initState() {
+    getUserImage();
+    getUserStatus();
     super.initState();
     tabController = TabController(length: 2, vsync: this);
   }
@@ -135,7 +149,8 @@ class _MyPageViewState extends State<MyPageWidget>
             CircleAvatar(
               radius: 55,
               backgroundImage: NetworkImage(
-                  'https://i.namu.wiki/i/AIWsICElbpxe8dupLfOGWKIuPAOZcPTyZosFComIBmsN_ViJ7rP9HEqF_pKM0tllaEciKIEhtZDV0LMcodz8h_-GsCYje9YB_5eBSrJAE8nQsBh1IVPRG2y-Oab3JJZeciEfTjHQVp61BA3DMxgsnQ.webp'),
+                imageURL
+              ),
             ),
             SizedBox(height: 15),
             Column(
@@ -158,7 +173,7 @@ class _MyPageViewState extends State<MyPageWidget>
                           ),
                           SizedBox(height: 5),
                           Text(
-                            'Some additional text', // Replace with actual text
+                            userStatus, // Replace with actual text
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black,

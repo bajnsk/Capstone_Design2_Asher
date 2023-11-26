@@ -5,6 +5,17 @@ class MyController {
   static List<FeedDataVO> myFeedsList = [];
   static List<FeedDataVO> iLikeFeedsList = [];
 
+  // 사용자의 프로필 이미지 가져오기
+  static String getUserProfileImage() {
+    logger.d(DataVO.myUserData.userProfile);
+    return DataVO.myUserData.userProfile;
+  }
+
+  // 사용자의 상태 메시지 가져오기
+  static String getUserStatusMessage() {
+    return DataVO.myUserData.statusMessage;
+  }
+
   // 내 피드 불러오기
   static Future<List<FeedDataVO>> getMyFeedsList() async {
     // 현재 로그인한 유저의 피드 ID 목록

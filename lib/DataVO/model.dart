@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 // 파베로 부터 받아온 데이터를 리스트 형태로 저장시켜놓는 공간
 
 // 유저 데이터에 대한 모델링 > 리스트
 class UserDataVO {
   @override
   String toString() {
-    return 'UserDataVO{uId: $uId, followedFeed: $followedFeed, friend: $friend, likeFeed: $likeFeed, userName: $userName, userProfile: $userProfile, tag: $tag, myFeed: $myFeed}';
+    return 'UserDataVO{uId: $uId, followedFeed: $followedFeed, friend: $friend, likeFeed: $likeFeed, userName: $userName, userProfile: $userProfile, tag: $tag, myFeed: $myFeed, statusMessage: $statusMessage}';
   }
 
   var uId;
@@ -17,6 +18,7 @@ class UserDataVO {
   var userProfile;
   var tag;
   var myFeed;
+  var statusMessage;
 
   UserDataVO({
     required this.uId,
@@ -27,6 +29,7 @@ class UserDataVO {
     required this.userProfile,
     required this.tag,
     required this.myFeed,
+    required this.statusMessage,
   });
 }
 
@@ -88,9 +91,10 @@ class DataVO {
               friend: userDataMap['friends'],
               likeFeed: userDataMap['like'],
               userName: userDataMap['name'],
-              userProfile: userDataMap['imageProfile'],
+              userProfile: userDataMap['profileImage'],
               tag: userDataMap['tag'],
               myFeed: userDataMap['feedIds'],
+              statusMessage: userDataMap['status_message']
             );
           } else {
             print('사용자 문서에 필수 필드가 누락되었습니다.');
