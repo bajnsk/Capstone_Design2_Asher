@@ -72,15 +72,6 @@ class FeedCardState extends State<FeedCardWidget> {
                   width: 10,
                 ),
                 Text(feedData.userName),
-                Expanded(
-                  child: Container(),
-                ),
-                InkWell(
-                  onTap: () {
-                    // Add the action for the more_vert icon
-                  },
-                  child: Icon(Icons.more_vert),
-                )
               ],
             ),
           ),

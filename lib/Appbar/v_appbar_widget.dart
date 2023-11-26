@@ -27,15 +27,7 @@ class AsherAppbar extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: EdgeInsets.only(right: 5),
           child: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FollowFriendList(),
-                ),
-              );
-              // 버튼을 눌렀을 때 수행할 동작 추가할 것
-            },
+            onPressed: () {},
             icon: Icon(Icons.notifications_none, color: Colors.black, size: 30),
           ),
         ),
