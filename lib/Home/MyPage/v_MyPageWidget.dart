@@ -28,16 +28,18 @@ class MyPageWidget extends StatefulWidget {
 class _MyPageViewState extends State<MyPageWidget>
     with TickerProviderStateMixin {
   late TabController tabController;
+
   // TextEditingController _controller = TextEditingController();
   late bool isFavorite;
   late String imageURL;
   late String userStatus;
 
   Future<void> getUserImage() async {
-      imageURL = MyController.getUserProfileImage();
+    imageURL = MyController.getUserProfileImage();
   }
+
   Future<void> getUserStatus() async {
-      userStatus = MyController.getUserStatusMessage();
+    userStatus = MyController.getUserStatusMessage();
   }
 
   @override
@@ -148,9 +150,7 @@ class _MyPageViewState extends State<MyPageWidget>
           children: [
             CircleAvatar(
               radius: 55,
-              backgroundImage: NetworkImage(
-                imageURL
-              ),
+              backgroundImage: NetworkImage(imageURL),
             ),
             SizedBox(height: 15),
             Column(
@@ -300,6 +300,12 @@ class _MyPageViewState extends State<MyPageWidget>
   }
 
   Widget _tabViewForMyFeeds() {
+    if (widget.myFeedsList.isEmpty) {
+      return Center(
+        child: Text('피드가 없습니다.'),
+      );
+    }
+
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -335,6 +341,12 @@ class _MyPageViewState extends State<MyPageWidget>
   }
 
   Widget _tabViewForLikeFeeds() {
+    if (widget.likeFeedsList.isEmpty) {
+      return Center(
+        child: Text('피드가 없습니다.'),
+      );
+    }
+
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,

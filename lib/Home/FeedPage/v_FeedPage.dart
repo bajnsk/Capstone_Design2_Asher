@@ -27,7 +27,10 @@ class _FeedPageState extends State<FeedsView> {
 
     Future.delayed(Duration(seconds: 1), () async {
       FollowedFeeds = await FeedController.getFollowedFeeds();
-      setState(() {});
+      setState(() {
+        // 피드가 없으면 로딩이 끝났음을 표시
+        allFeedsChecked = FollowedFeeds.isEmpty;
+      });
     });
   }
 
@@ -70,7 +73,11 @@ class _FeedPageState extends State<FeedsView> {
           );
         } else if (allFeedsChecked) {
           // 모든 데이터를 로드한 경우 특정 위젯을 표시
-          return AllFeedsCheckedWidget();
+          return Center(
+            child: FollowedFeeds.isEmpty
+                ? Text('피드가 없습니다.')
+                : AllFeedsCheckedWidget(),
+          );
         } else if (!allFeedsChecked && index == items.length - 1) {
           // 로딩 중에는 디자인된 CircularProgressIndicator를 표시
           return Center(
