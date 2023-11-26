@@ -64,17 +64,17 @@ class AuthRepository {
       await userCredential.user!.sendEmailVerification();
 
       await firebaseFirestore.collection('users').doc(uid).set({
-        'uid': uid,
+        'userId': uid,
         'email': email,
         'name': name,
         'feedCount': 0,
         'like': [],
         'followedFeed': [],
         'friends': [],
-        'feedId': [],
+        'feedIds': [],
         'profileImage': 'https://firebasestorage.googleapis.com/v0/b/capstone2-1ad1d.appspot.com/o/icon-profile.png?alt=media&token=4cd1d2a6-de0b-4263-ad8a-a150394a956d',
         'tag': [],
-        'status_message' : '',
+        'status_message' : 'Hi',
       });
 
       firebaseAuth.signOut();
