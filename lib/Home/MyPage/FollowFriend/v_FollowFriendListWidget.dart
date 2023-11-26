@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'c_FollowFriendController.dart';
 
 class FollowFriendListWidget extends StatefulWidget {
-  const FollowFriendListWidget({super.key});
+  const FollowFriendListWidget({Key? key}) : super(key: key);
 
   @override
   State<FollowFriendListWidget> createState() => _FollowFriendListWidgetState();
@@ -11,27 +14,50 @@ class FollowFriendListWidget extends StatefulWidget {
 
 class _FollowFriendListWidgetState extends State<FollowFriendListWidget> {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<bool> isFriendSelectedList = List.filled(DataVO.myUserData.friend.length, false);
+  Map<String, String> friendNameCache = {}; // Cache to store friend names
+  List<bool> isFriendSelectedList =
+      List.filled(DataVO.myUserData.friend.length, false);
+
+  List<String> selectedFriendUids = [];
+
+  Future<String> getFriendName(String friendUid) async {
+    // Check if friend name is already in the cache
+    if (friendNameCache.containsKey(friendUid)) {
+      return friendNameCache[friendUid]!;
+    }
+
+    // If not in cache, fetch friend name from Firestore
+    DocumentSnapshot snapshot =
+        await _firestore.collection('users').doc(friendUid).get();
+
+    if (snapshot.exists) {
+      String friendName = snapshot['name'];
+      // Cache the friend name
+      friendNameCache[friendUid] = friendName;
+      return friendName;
+    } else {
+      return '사용자를 찾을 수 없습니다';
+    }
+  }
 
   Widget _followlistbox(String friendUid, int index) {
-
-    return FutureBuilder<DocumentSnapshot>(
-      future: _firestore.collection('users').doc(friendUid).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+    return FutureBuilder<String>(
+      future: getFriendName(friendUid),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: 100,
+            decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: Colors.grey))),
+          );
         }
 
         if (snapshot.hasError) {
           return Text('오류: ${snapshot.error}');
         }
 
-        if (!snapshot.hasData || !snapshot.data!.exists) {
-          return Text('사용자를 찾을 수 없습니다');
-        }
-
-        var friendData = snapshot.data!.data() as Map<String, dynamic>;
+        String friendName = snapshot.data ?? '사용자를 찾을 수 없습니다';
 
         return Container(
           width: MediaQuery.of(context).size.width,
@@ -67,8 +93,11 @@ class _FollowFriendListWidgetState extends State<FollowFriendListWidget> {
                         height: 18,
                       ),
                       Text(
-                        friendData['name'],
-                        style: TextStyle(fontSize: 20),
+                        friendName,
+                        style: GoogleFonts.notoSans(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                         textAlign: TextAlign.start,
                       ),
                     ],
@@ -78,27 +107,33 @@ class _FollowFriendListWidgetState extends State<FollowFriendListWidget> {
               Padding(
                 padding: const EdgeInsets.only(left: 40),
                 child: Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                    ),
-                    child: Transform.scale(
-                      scale: 1.4,
-                      child: Checkbox(
-                        value: isFriendSelectedList[index],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            isFriendSelectedList[index] = value ?? false;
-                          });
-                          // 체크박스 상태가 변경될 때 실행되는 작업 추가
-                        },
-                        activeColor: Colors.white,
-                        checkColor: Colors.black,
-                      ),
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: Transform.scale(
+                    scale: 1.4,
+                    child: Checkbox(
+                      value: isFriendSelectedList[index],
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isFriendSelectedList[index] = value ?? false;
+                          if (value ?? false) {
+                            selectedFriendUids.add(friendUid);
+                          } else {
+                            selectedFriendUids.remove(friendUid);
+                          }
+                        });
+                      },
+                      activeColor:
+                          Colors.grey[300], // Adjust the checkbox colors
+                      checkColor: Colors.black,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                   ),
                 ),
+              ),
             ],
           ),
         );
@@ -106,13 +141,74 @@ class _FollowFriendListWidgetState extends State<FollowFriendListWidget> {
     );
   }
 
+  void _onFeedToFriendPressed() async {
+    if (selectedFriendUids.isNotEmpty) {
+      // Follow the feed to selected friends
+      await FollowFriendController().followToFriend(selectedFriendUids);
+
+      // Display a success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('피드가 친구에게 팔로우 되었습니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      // Go back to the previous screen
+      Navigator.of(context).pop();
+    } else {
+      // If no friends are selected, show a warning message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('친구를 선택해주세요.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: DataVO.myUserData.friend.length,
-      itemBuilder: (BuildContext context, int index) {
-        return _followlistbox(DataVO.myUserData.friend[index], index);
-      },
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[300],
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Text('이 피드를 보여줄 친구 선택'),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: DataVO.myUserData.friend.length,
+              itemBuilder: (BuildContext context, int index) {
+                return _followlistbox(DataVO.myUserData.friend[index], index);
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: _onFeedToFriendPressed,
+              child: Text(
+                'Feed To Friend',
+                style: GoogleFonts.notoSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:like_button/like_button.dart';
 import '../../DataVO/model.dart';
 import '../../main.dart';
 import '../FeedPage/c_FeedPageController.dart';
+import 'c_DetailPageController.dart';
 
 class DetailPageWidget extends StatefulWidget {
   final FeedDataVO feedData;
@@ -27,6 +28,12 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
     super.initState();
     // 전달받은 isFavorite 값으로 초기화합니다.
     isFavorite = DataVO.myUserData.likeFeed.contains(widget.feedData.feedId);
+    DetailPageController.getFeedID = widget.feedData.feedId;
+  }
+
+  // 더보기 메뉴를 표시하는 함수
+  void _showMoreMenu(BuildContext context) {
+    DetailPageController.showMoreMenu(context);
   }
 
   @override
@@ -79,7 +86,8 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                   Spacer(), // 여기에 Spacer 추가
                   InkWell(
                     onTap: () {
-                      // Add the action for the more_vert icon
+                      // Show more menu
+                      _showMoreMenu(context);
                     },
                     child: Icon(Icons.more_vert),
                   ),
