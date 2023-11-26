@@ -37,7 +37,7 @@ class UserDataVO {
 class FeedDataVO {
   @override
   String toString() {
-    return 'FeedDataVO{feedId: $feedId, userId: $userId, reContentId: $reContentId, context_text: $context_text, image: $image, makeTime: $makeTime, tag: $tag, userName: $userName}';
+    return 'FeedDataVO{feedId: $feedId, userId: $userId, reContentId: $reContentId, context_text: $context_text, image: $image, makeTime: $makeTime, tag: $tag, userName: $userName, userProfile: $userProfile}';
   }
 
   var feedId;
@@ -48,6 +48,7 @@ class FeedDataVO {
   var makeTime;
   var tag;
   var userName;
+  var userProfile;
 
   FeedDataVO({
     required this.feedId,
@@ -58,6 +59,7 @@ class FeedDataVO {
     required this.makeTime,
     required this.tag,
     required this.userName,
+    required this.userProfile,
   });
 }
 
@@ -128,6 +130,7 @@ class DataVO {
           makeTime: doc['makeTime'],
           tag: doc['tag'],
           userName: doc['userName'],
+          userProfile: doc['userProfile'],
         );
       }).toList();
       print('피드 데이터 성공적으로 가져옴.');

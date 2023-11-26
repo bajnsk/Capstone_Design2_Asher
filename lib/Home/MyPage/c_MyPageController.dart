@@ -1,5 +1,4 @@
 import 'package:capstone/DataVO/model.dart';
-import '../../main.dart';
 
 class MyController {
   static List<FeedDataVO> myFeedsList = [];
@@ -7,7 +6,6 @@ class MyController {
 
   // 사용자의 프로필 이미지 가져오기
   static String getUserProfileImage() {
-    logger.d(DataVO.myUserData.userProfile);
     return DataVO.myUserData.userProfile;
   }
 

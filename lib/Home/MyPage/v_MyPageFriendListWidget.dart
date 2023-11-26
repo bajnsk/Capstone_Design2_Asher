@@ -12,7 +12,7 @@ class MyPageFriendListWidget extends StatefulWidget {
 }
 
 class _MyPageFriendListWidgetState extends State<MyPageFriendListWidget> {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   void _removeFriend(String friendUid) {
     // FriendController 클래스에 있는 removeFriendByName 함수를 호출하여 친구를 삭제
@@ -58,13 +58,12 @@ class _MyPageFriendListWidgetState extends State<MyPageFriendListWidget> {
                   height: 60,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: NetworkImage(friendData['profileImage']),
+                      fit: BoxFit.cover, // 이미지가 동그랗게 잘리지 않도록 설정
+                    ),
                   ),
-                  child: Icon(
-                    Icons.account_circle,
-                    size: 60,
-                    color: Colors.grey,
-                  ),
-                ),
+                )
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20),

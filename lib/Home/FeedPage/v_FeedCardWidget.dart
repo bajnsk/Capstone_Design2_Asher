@@ -65,7 +65,7 @@ class FeedCardState extends State<FeedCardWidget> {
                 CircleAvatar(
                   radius: 15,
                   backgroundImage: NetworkImage(
-                    'https://i.namu.wiki/i/AIWsICElbpxe8dupLfOGWKIuPAOZcPTyZosFComIBmsN_ViJ7rP9HEqF_pKM0tllaEciKIEhtZDV0LMcodz8h_-GsCYje9YB_5eBSrJAE8nQsBh1IVPRG2y-Oab3JJZeciEfTjHQVp61BA3DMxgsnQ.webp',
+                    feedData.userProfile,
                   ),
                 ),
                 SizedBox(
