@@ -76,6 +76,13 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                   ),
                   SizedBox(width: 10),
                   Text(feedData.userName),
+                  Spacer(), // 여기에 Spacer 추가
+                  InkWell(
+                    onTap: () {
+                      // Add the action for the more_vert icon
+                    },
+                    child: Icon(Icons.more_vert),
+                  ),
                 ],
               ),
             ),

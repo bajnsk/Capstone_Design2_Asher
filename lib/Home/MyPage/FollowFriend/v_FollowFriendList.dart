@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:capstone/Home/DetailPage/v_FollowFriendListWidget.dart';
+import 'package:capstone/Home/MyPage/FollowFriend/v_FollowFriendListWidget.dart';
 
 class FollowFriendList extends StatefulWidget {
   const FollowFriendList({super.key});

@@ -1,4 +1,4 @@
-import 'package:capstone/Home/DetailPage/v_FollowFriendList.dart';
+import 'package:capstone/Home/MyPage/FollowFriend/v_FollowFriendList.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
