@@ -86,16 +86,15 @@ class DataVO {
 
           if (userDataMap != null && userDataMap.containsKey('userId')) {
             myUserData = UserDataVO(
-              uId: userDataMap['userId'],
-              followedFeed: userDataMap['followedFeed'],
-              friend: userDataMap['friends'],
-              likeFeed: userDataMap['like'],
-              userName: userDataMap['name'],
-              userProfile: userDataMap['profileImage'],
-              tag: userDataMap['tag'],
-              myFeed: userDataMap['feedIds'],
-              statusMessage: userDataMap['status_message']
-            );
+                uId: userDataMap['userId'],
+                followedFeed: userDataMap['followedFeed'],
+                friend: userDataMap['friends'],
+                likeFeed: userDataMap['like'],
+                userName: userDataMap['name'],
+                userProfile: userDataMap['profileImage'],
+                tag: userDataMap['tag'],
+                myFeed: userDataMap['feedIds'],
+                statusMessage: userDataMap['status_message']);
           } else {
             print('사용자 문서에 필수 필드가 누락되었습니다.');
           }
@@ -142,6 +141,8 @@ class DataVO {
       // 로그인 후 불러 와야할 데이터 모델들을 정의
       // 사용자 인증 => DataVO 인스턴스 초기화 후 fetchData 호출 해야 함
       await fetchUserData();
+      print("여기다! 여기!");
+      print(myUserData.followedFeed);
       await fetchFeedData();
       //updateLikeFeedData();
     } catch (e) {
