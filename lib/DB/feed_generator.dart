@@ -93,6 +93,8 @@ class _FeedGeneratorState extends State<FeedGenerator> {
 
         if (userDoc.exists) {
           String userName = userDoc['name'];
+          String UserProfile = userDoc['profileImage'];
+
           // 태그 #으로 배열화
           List<String> tags = tagText
               .split('#')
@@ -135,6 +137,7 @@ class _FeedGeneratorState extends State<FeedGenerator> {
             'image': imageUrls.isNotEmpty ? imageUrls : [],
             'tag': tags,
             'userName': userName,
+            'userProfile': UserProfile,
           });
 
           String feedId = docRef.id;
@@ -296,6 +299,9 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Feed를 등록했습니다.')),
                       );
+
+                      // Feed 등록 후 이전 화면으로 돌아가기
+                      Navigator.of(context).pop();
                     } else {
                       // 이미지가 선택되지 않은 경우에 대한 처리
                       ScaffoldMessenger.of(context).showSnackBar(
