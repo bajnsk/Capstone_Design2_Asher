@@ -1,3 +1,4 @@
+import 'package:capstone/Home/DetailPage/v_FollowFriendList.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -27,8 +28,13 @@ class AsherAppbar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.only(right: 5),
           child: IconButton(
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FollowFriendList(),
+                ),
+              );
               // 버튼을 눌렀을 때 수행할 동작 추가할 것
-              // DB 테스트용 위젯 연결
             },
             icon: Icon(Icons.notifications_none, color: Colors.black, size: 30),
           ),
