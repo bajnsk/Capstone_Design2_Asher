@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:capstone/Home/MyPage/v_MyPage.dart';
 import 'package:capstone/Home/MyPage/v_MyPageEditProfilePopup.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
@@ -37,6 +38,18 @@ class _MyPageViewState extends State<MyPageWidget>
   late String imageURL;
   late String userStatus;
 
+  late int FriendLength;
+  late int FeedsLength;
+  late int LikesLength;
+
+  void onFriendAdded() {
+    print('헤헤헤헤ㅔ헤헤');
+    setState(() {
+      MyPageWidgetState().initState();
+      print('됐냐?');
+    });
+  }
+
   Future<void> getUserImage() async {
     imageURL = MyController.getUserProfileImage();
   }
@@ -51,6 +64,9 @@ class _MyPageViewState extends State<MyPageWidget>
     getUserStatus();
     super.initState();
     tabController = TabController(length: 2, vsync: this);
+    FriendLength = DataVO.myUserData.friend.length;
+    FeedsLength = DataVO.myUserData.myFeed.length;
+    LikesLength = DataVO.myUserData.likeFeed.length;
   }
 
   // 사용자의 친구 수 게시글 수 좋아요 누른 수를 나타내기 위한 위젯
@@ -85,11 +101,14 @@ class _MyPageViewState extends State<MyPageWidget>
           Expanded(
             child: InkWell(
               onTap: () {
-                //누를 시 수행할 작업 추가
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return MyPageEditProfilePopup(); // 위에서 정의한 팝업 위젯
+                setState(
+                  () {
+                    //누를 시 수행할 작업 추가
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return MyPageEditProfilePopup(); // 위에서 정의한 팝업 위젯
+                        });
                   },
                 );
               },
@@ -121,7 +140,7 @@ class _MyPageViewState extends State<MyPageWidget>
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return MyPageAddFriendPopup(); // 위에서 정의한 팝업 위젯
+                  return MyPageAddFriendPopup(onFriendAdded: onFriendAdded);
                 },
               );
             },
@@ -224,10 +243,9 @@ class _MyPageViewState extends State<MyPageWidget>
                             ),
                           );
                         },
-                        child: _statisticsOne(
-                            DataVO.myUserData.friend.length, 'Friends')),
-                    _statisticsOne(DataVO.myUserData.myFeed.length, 'Feeds'),
-                    _statisticsOne(DataVO.myUserData.likeFeed.length, 'Likes'),
+                        child: _statisticsOne(FriendLength, 'Friends')),
+                    _statisticsOne(FeedsLength, 'Feeds'),
+                    _statisticsOne(LikesLength, 'Likes'),
                   ],
                 ),
               ],

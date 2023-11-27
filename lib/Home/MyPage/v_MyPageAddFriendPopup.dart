@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:capstone/DB/friends_generator.dart';
 
 class MyPageAddFriendPopup extends StatefulWidget {
-  const MyPageAddFriendPopup({super.key});
+  const MyPageAddFriendPopup({super.key, required this.onFriendAdded});
+  final VoidCallback onFriendAdded;
 
   @override
   State<MyPageAddFriendPopup> createState() => _MyPagePopupState();
@@ -16,7 +17,7 @@ class _MyPagePopupState extends State<MyPageAddFriendPopup> {
   late String uid;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     getUserUid();
   }
@@ -32,11 +33,9 @@ class _MyPagePopupState extends State<MyPageAddFriendPopup> {
 
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Add Friend',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20
-        ),
+      title: Text(
+        'Add Friend',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ),
       content: Container(
         width: 300,
@@ -46,27 +45,26 @@ class _MyPagePopupState extends State<MyPageAddFriendPopup> {
           children: [
             TextField(
               controller: _usernameController,
-              decoration: InputDecoration(hintText: '친구추가할 Uid를 입력해주세요.',
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                )
-              ),
+              decoration: InputDecoration(
+                  hintText: '친구추가할 Uid를 입력해주세요.',
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  )),
               cursorColor: Colors.black,
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Text(
               'Your Uid',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             SelectableText(
               uid,
-              style: TextStyle(
-                fontSize: 16
-              ),
+              style: TextStyle(fontSize: 16),
             )
           ],
         ),
@@ -76,7 +74,8 @@ class _MyPagePopupState extends State<MyPageAddFriendPopup> {
           onPressed: () {
             Navigator.of(context).pop(); // Close the dialog
           },
-          child: Text('Cancel',
+          child: Text(
+            'Cancel',
             style: TextStyle(
               color: Colors.black,
             ),
@@ -87,11 +86,11 @@ class _MyPagePopupState extends State<MyPageAddFriendPopup> {
             // Handle the username update logic here
             _friendController.addFriendByName(_usernameController.text);
             // Perform the update logic
-
-
+            widget.onFriendAdded();
             Navigator.of(context).pop(); // Close the dialog
           },
-          child: Text('Add',
+          child: Text(
+            'Add',
             style: TextStyle(
               color: Colors.black,
             ),

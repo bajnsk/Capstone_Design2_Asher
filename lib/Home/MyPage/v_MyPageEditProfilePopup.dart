@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class MyPageEditProfilePopup extends StatefulWidget {
-
   const MyPageEditProfilePopup({super.key});
 
   @override

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../main.dart';
+import 'package:capstone/DataVO/model.dart';
 
 class FriendController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -28,6 +29,8 @@ class FriendController {
         await _firestore.collection('users').doc(friendUid).update({
           'friends': FieldValue.arrayUnion([currentUserUid]),
         });
+
+        DataVO.myUserData.friend.add(friendUid);
 
         logger.d('친구가 성공적으로 추가되었습니다.');
       } else {
