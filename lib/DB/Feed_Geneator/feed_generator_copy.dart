@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import '../main.dart';
+import '../../main.dart';
 import 'dart:io' as io;
 
 class FeedGenerator extends StatefulWidget {
@@ -44,8 +44,8 @@ class _FeedGeneratorState extends State<FeedGenerator> {
             child: Image.file(
               io.File(data),
               fit: BoxFit.cover,
-              height: 200,
-              width: MediaQuery.of(context).size.width - 50,
+              height: MediaQuery.of(context).size.height * 0.4,
+              width: 200,
             ),
           ),
           Positioned(
@@ -182,42 +182,34 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                 SizedBox(
                   height: 20,
                 ),
+                // 업로드 아이콘 누를 시 이미지 선택
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 15,
                     horizontal: 15,
                   ),
-                  child: Container(
-                    height: 200,
-                    width: MediaQuery.of(context).size.width - 50,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: PageView(
-                      scrollDirection: Axis.horizontal,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
                       children: [
-                        if (_files.isEmpty)
-                          InkWell(
-                            onTap: () async {
-                              final images = await selectImages();
-                              setState(() {
-                                _files.addAll(images.where((imagePath) =>
-                                    !_files.contains(imagePath)));
-                              });
-                            },
-                            child: Container(
-                              height: 200,
-                              width: 200,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Icon(Icons.add_a_photo_outlined,
-                                size: 50,
-                              ),
+                        InkWell(
+                          onTap: () async {
+                            final images = await selectImages();
+                            setState(() {
+                              _files.addAll(images.where(
+                                  (imagePath) => !_files.contains(imagePath)));
+                            });
+                          },
+                          child: Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(5),
                             ),
+                            child: Icon(Icons.upload),
                           ),
+                        ),
                         ...selectedImageList(),
                       ],
                     ),
@@ -236,35 +228,62 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                   height: 10,
                 ),
                 Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: 2),
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 0,
+                          blurRadius: 5,
+                          offset: Offset(0, 7),
+                        )
+                      ]),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  height: 150,
                   width: MediaQuery.of(context).size.width - 50,
                   child: TextFormField(
                     controller: _contentController,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: InputDecoration(
-                        hintText: '내용을 입력하세요.',
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black))),
+                      hintText: '내용을 입력하세요.',
+                      border: InputBorder.none,
+                    ),
                   ),
                 ),
-                //),
                 SizedBox(
                   height: 20,
                 ),
                 Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: 2),
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 0,
+                          blurRadius: 5,
+                          offset: Offset(0, 5),
+                        )
+                      ]),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  height: 50,
                   width: MediaQuery.of(context).size.width - 50,
                   child: TextFormField(
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     controller: _tagController,
                     decoration: InputDecoration(
-                        hintText: '태그를 입력하세요.',
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black))),
+                      hintText: '태그를 입력하세요.',
+                      border: InputBorder.none,
+                    ),
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 ElevatedButton(
                   onPressed: () async {
