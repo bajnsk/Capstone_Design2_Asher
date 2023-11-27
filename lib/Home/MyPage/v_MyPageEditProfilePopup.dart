@@ -29,6 +29,26 @@ class _MyPageEditProfilePopupState extends State<MyPageEditProfilePopup> {
     }
   }
 
+  Future<void> uploadProfileData(File? imageFile, String message) async {
+    if (imageFile != null) {
+      await uploadProfileImage(imageFile);
+      await updateStatusMessage(message);
+    }
+  }
+
+  Future<void> updateStatusMessage(String message) async {
+    // 사용자 문서 업데이트
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({
+        'status_message': message,
+      });
+    }
+  }
+
   // 이미지를 Firebase Storage에 업로드
   Future<void> uploadProfileImage(File imageFile) async {
     Reference firebaseStorageRef = FirebaseStorage.instance.ref().child(
@@ -47,7 +67,6 @@ class _MyPageEditProfilePopupState extends State<MyPageEditProfilePopup> {
           .doc(user.uid)
           .update({
         'profileImage': imageUrl,
-        'status_message': _statusMessageController.text,
       });
     }
   }
@@ -128,11 +147,26 @@ class _MyPageEditProfilePopupState extends State<MyPageEditProfilePopup> {
           onPressed: () async {
             // Handle the username update logic here
             // Perform the update logic
-            if (_imageFile != null) {
+            if (_imageFile == null && _statusMessageController.text.isEmpty) {
+              // 입력값이 아무것도 없으면 pop
+              Navigator.of(context).pop();
+            } else if (_imageFile == null &&
+                _statusMessageController.text.isNotEmpty) {
+              // message만 작성되어 있으면 메시지만 저장
+              await updateStatusMessage(_statusMessageController.text);
+              Navigator.of(context).pop();
+            } else if (_imageFile != null &&
+                _statusMessageController.text.isEmpty) {
+              // Image만 Null이 아니면 이미지만 저장
               await uploadProfileImage(_imageFile!);
-            }
+              Navigator.of(context).pop();
+            } else {
+              // 둘 다 저장
+              await uploadProfileData(
+                  _imageFile, _statusMessageController.text);
 
-            Navigator.of(context).pop(); // Close the dialog
+              Navigator.of(context).pop();
+            }
           },
           child: Text(
             'Save',
