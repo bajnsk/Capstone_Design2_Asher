@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import '../../DataVO/model.dart';
 import '../../main.dart';
 import 'dart:io' as io;
 
@@ -182,6 +183,36 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                 SizedBox(
                   height: 20,
                 ),
+                Container(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey,
+                        width: 0.7,
+                      ),
+                      top: BorderSide(
+                        color: Colors.grey,
+                        width: 0.7,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 15,
+                        backgroundImage: NetworkImage(
+                          DataVO.myUserData.userProfile,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text(DataVO.myUserData.userName),
+                      Spacer(), // 여기에 Spacer 추가
+                    ],
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 15,
@@ -213,7 +244,8 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                                 color: Colors.grey.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(5),
                               ),
-                              child: Icon(Icons.add_a_photo_outlined,
+                              child: Icon(
+                                Icons.add_a_photo_outlined,
                                 size: 50,
                               ),
                             ),
