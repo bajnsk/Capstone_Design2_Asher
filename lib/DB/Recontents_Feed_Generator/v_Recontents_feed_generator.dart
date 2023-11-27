@@ -166,6 +166,7 @@ class _FeedGeneratorState extends State<FeedGenerator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('리컨텐츠 피드 작성'),
         backgroundColor: Colors.grey[300],
         elevation: 0,
         leading: IconButton(
