@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../DB/friends_generator.dart';
+import '../../DB/Friend_Generator/friends_generator.dart';
 
 class MyPageFriendListWidget extends StatefulWidget {
   const MyPageFriendListWidget({Key? key}) : super(key: key);
@@ -52,19 +52,18 @@ class _MyPageFriendListWidgetState extends State<MyPageFriendListWidget> {
           child: Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: NetworkImage(friendData['profileImage']),
-                      fit: BoxFit.cover, // 이미지가 동그랗게 잘리지 않도록 설정
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: NetworkImage(friendData['profileImage']),
+                        fit: BoxFit.cover, // 이미지가 동그랗게 잘리지 않도록 설정
+                      ),
                     ),
-                  ),
-                )
-              ),
+                  )),
               Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Container(

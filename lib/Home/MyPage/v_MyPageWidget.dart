@@ -4,7 +4,7 @@ import 'package:capstone/Home/MyPage/v_MyPage.dart';
 import 'package:capstone/Home/MyPage/v_MyPageEditProfilePopup.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone/DataVO/model.dart';
-import '../../DB/feed_generator.dart';
+import '../../DB/Feed_Geneator/feed_generator.dart';
 import '../../main.dart';
 import '../DetailPage/v_DetailPageWidget.dart';
 import 'package:capstone/Home/MyPage/v_MyPageAddFriendPopup.dart';

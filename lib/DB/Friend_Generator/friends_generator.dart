@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../main.dart';
+import '../../main.dart';
 import 'package:capstone/DataVO/model.dart';
 
 class FriendController {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:capstone/DB/friends_generator.dart';
+import 'package:capstone/DB/Friend_Generator/friends_generator.dart';
 
 class MyPageAddFriendPopup extends StatefulWidget {
   const MyPageAddFriendPopup({super.key, required this.onFriendAdded});
