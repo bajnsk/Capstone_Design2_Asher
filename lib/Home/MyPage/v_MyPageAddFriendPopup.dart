@@ -31,6 +31,15 @@ class _MyPagePopupState extends State<MyPageAddFriendPopup> {
     }
   }
 
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
@@ -46,10 +55,11 @@ class _MyPagePopupState extends State<MyPageAddFriendPopup> {
             TextField(
               controller: _usernameController,
               decoration: InputDecoration(
-                  hintText: '친구추가할 Uid를 입력해주세요.',
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  )),
+                hintText: '새로운 친구의 20자리 코드를 입력해주세요.',
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+              ),
               cursorColor: Colors.black,
             ),
             SizedBox(
@@ -83,10 +93,9 @@ class _MyPagePopupState extends State<MyPageAddFriendPopup> {
         ),
         TextButton(
           onPressed: () {
-            // Handle the username update logic here
             _friendController.addFriendByName(_usernameController.text);
-            // Perform the update logic
             widget.onFriendAdded();
+            _showSnackBar('친구가 추가되었습니다.');
             Navigator.of(context).pop(); // Close the dialog
           },
           child: Text(
