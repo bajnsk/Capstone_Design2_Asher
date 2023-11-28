@@ -42,7 +42,7 @@ class _RecontentsDetailPageWidgetState
 
   void setFeedData() {
     // originalFeed 설정
-    originalFeed = DataVO.feedData.firstWhere(
+    recontentsFeed = DataVO.feedData.firstWhere(
       (feed) => feed.feedId.toString() == recontentsFeedIds[0],
       orElse: () => FeedDataVO(
         feedId: 'null',
@@ -58,7 +58,7 @@ class _RecontentsDetailPageWidgetState
     );
 
     // recontentsFeed 설정
-    recontentsFeed = DataVO.feedData.firstWhere(
+    originalFeed = DataVO.feedData.firstWhere(
       (feed) => feed.feedId.toString() == recontentsFeedIds[1],
       orElse: () => FeedDataVO(
         feedId: 'null',
