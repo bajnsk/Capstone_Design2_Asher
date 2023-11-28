@@ -25,6 +25,7 @@ class MyPageWidget extends StatefulWidget {
     required this.index,
     required this.likeFeedsList,
   });
+
   @override
   State<MyPageWidget> createState() => _MyPageViewState();
 }
@@ -351,11 +352,25 @@ class _MyPageViewState extends State<MyPageWidget>
               ),
             );
           },
-          child: Container(
-            child: ClipRRect(
-              child: Image.network(feedData.image[0]),
+          child: Stack(children: [
+            Container(
+              alignment: Alignment.center,
+              child: ClipRRect(
+                child: Image.network(feedData.image[0]),
+              ),
             ),
-          ),
+            feedData.reContentId != null
+                ? Positioned(
+                    left: 1,
+                    top: 5,
+                    child: Icon(
+                      Icons.attach_file,
+                      color: Colors.grey,
+                      size: 20,
+                    ),
+                  )
+                : Container(),
+          ]),
         );
       },
     );
