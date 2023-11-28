@@ -1,3 +1,4 @@
+import 'package:capstone/Home/DetailPage/v_RecontentsDetailPageWidget.dart';
 import 'package:capstone/Home/FeedPage//c_FeedPageController.dart';
 import 'package:capstone/Home/DetailPage/v_DetailPageWidget.dart';
 import 'package:flutter/material.dart';
@@ -84,19 +85,17 @@ class FeedCardState extends State<FeedCardWidget> {
             ),
           ),
           // 사진 컨테이너
-          Stack(
-            children: [
-              feedData.reContentId != null
-              ? Positioned(
-                top: 20,
-                left: 10,
-                child: Icon(
-                  Icons.attach_file
-                ),
-              )
-              : Container(),
-              GestureDetector(
-                onTap: () async {
+          Stack(children: [
+            feedData.reContentId != null
+                ? Positioned(
+                    top: 20,
+                    left: 10,
+                    child: Icon(Icons.attach_file),
+                  )
+                : Container(),
+            GestureDetector(
+              onTap: () async {
+                if (widget.feedData.reContentId == null) {
                   var returnedValue = await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -111,72 +110,102 @@ class FeedCardState extends State<FeedCardWidget> {
                       isFavorite = returnedValue;
                     });
                   }
-                },
-                child: Container(
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
-                    child: Stack(alignment: Alignment.topRight, children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 50, right: 50, top: 10),
-                        width: MediaQuery.of(context).size.width - 100,
-                        height: 230,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: PageView.builder(
-                              itemCount: feedData.image.length,
-                              onPageChanged: (value) {
-                                setState(() {
-                                  currentPageIndex = value;
-                                });
-                              },
-                              itemBuilder: (BuildContext context, int index) {
-                                return Image.network(
-                                  feedData.image.isNotEmpty &&
-                                      feedData.image.length > 0
-                                      ? feedData.image[index]
-                                      : 'https://firebasestorage.googleapis.com/v0/b/capstone2-1ad1d.appspot.com/o/smile%20pepe.png?alt=media&token=2240d1b9-b8cd-472a-81b8-d4f3be82335b',
-                                  fit: BoxFit.cover,
-                                );
-                              }),
-                        ),
+                } else {
+                  var returnedValue = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RecontentsDetailPageWidget(
+                              feedData: feedData,
+                              isFavorite: isFavorite,
+                            )),
+                  );
+                  if (returnedValue != null && returnedValue is bool) {
+                    setState(() {
+                      isFavorite = returnedValue;
+                    });
+                  }
+                }
+              },
+              child: Container(
+                height: 250,
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Stack(alignment: Alignment.topRight, children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 50, right: 50, top: 10),
+                      width: MediaQuery.of(context).size.width - 100,
+                      height: 230,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                      Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 10),
-                          margin: const EdgeInsets.only(top: 20, right: 60),
-                          decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.8),
-                              borderRadius: BorderRadius.circular(500)),
-                          child: Text(
-                            '${currentPageIndex + 1}/${feedData.image.length}',
-                            style: TextStyle(color: Colors.white),
-                          )),
-                    ]),
-                  ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: PageView.builder(
+                            itemCount: feedData.image.length,
+                            onPageChanged: (value) {
+                              setState(() {
+                                currentPageIndex = value;
+                              });
+                            },
+                            itemBuilder: (BuildContext context, int index) {
+                              return Image.network(
+                                feedData.image.isNotEmpty &&
+                                        feedData.image.length > 0
+                                    ? feedData.image[index]
+                                    : 'https://firebasestorage.googleapis.com/v0/b/capstone2-1ad1d.appspot.com/o/smile%20pepe.png?alt=media&token=2240d1b9-b8cd-472a-81b8-d4f3be82335b',
+                                fit: BoxFit.cover,
+                              );
+                            }),
+                      ),
+                    ),
+                    Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
+                        margin: const EdgeInsets.only(top: 20, right: 60),
+                        decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(500)),
+                        child: Text(
+                          '${currentPageIndex + 1}/${feedData.image.length}',
+                          style: TextStyle(color: Colors.white),
+                        )),
+                  ]),
                 ),
               ),
-            ]
-          ),
+            ),
+          ]),
           // 본문 컨테이너
           GestureDetector(
             onTap: () async {
-              var returnedValue = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailPageWidget(
-                    feedData: feedData,
-                    isFavorite: isFavorite,
+              if (widget.feedData.reContentId == null) {
+                var returnedValue = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailPageWidget(
+                      feedData: feedData,
+                      isFavorite: isFavorite,
+                    ),
                   ),
-                ),
-              );
-              if (returnedValue != null && returnedValue is bool) {
-                setState(() {
-                  isFavorite = returnedValue;
-                });
+                );
+                if (returnedValue != null && returnedValue is bool) {
+                  setState(() {
+                    isFavorite = returnedValue;
+                  });
+                }
+              } else {
+                var returnedValue = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RecontentsDetailPageWidget(
+                            feedData: feedData,
+                            isFavorite: isFavorite,
+                          )),
+                );
+                if (returnedValue != null && returnedValue is bool) {
+                  setState(() {
+                    isFavorite = returnedValue;
+                  });
+                }
               }
             },
             child: Container(
