@@ -49,6 +49,16 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
     }
   }
 
+  Future<void> _showSnackBar(String message) async {
+    // Find the Scaffold in the widget tree and use it to show a SnackBar
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 1), // Displayed for 2 seconds
+      ),
+    );
+  }
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isUploading = false;
   final List<String> _files = [];
@@ -374,11 +384,9 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
                         _files,
                         _tagController.text,
                       ); // 이미지 파일의 경로를 사용
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Feed를 등록했습니다.')),
-                      );
 
                       // Feed 등록 후 이전 화면으로 돌아가기
+                      _showSnackBar('해당 피드가 리컨텐츠 피드로 등록되었습니다.');
                       Navigator.of(context).pop();
                     } else {
                       // 이미지가 선택되지 않은 경우에 대한 처리
