@@ -29,6 +29,16 @@ class _MyPageEditProfilePopupState extends State<MyPageEditProfilePopup> {
     }
   }
 
+  Future<void> _showSnackBar(String message) async {
+    // Find the Scaffold in the widget tree and use it to show a SnackBar
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2), // Displayed for 2 seconds
+      ),
+    );
+  }
+
   Future<void> uploadProfileData(File? imageFile, String message) async {
     if (imageFile != null) {
       await uploadProfileImage(imageFile);
@@ -46,6 +56,8 @@ class _MyPageEditProfilePopupState extends State<MyPageEditProfilePopup> {
           .update({
         'status_message': message,
       });
+      DataVO.myUserData.statusMessage = null;
+      DataVO.myUserData.statusMessage = message;
     }
   }
 
@@ -154,17 +166,20 @@ class _MyPageEditProfilePopupState extends State<MyPageEditProfilePopup> {
                 _statusMessageController.text.isNotEmpty) {
               // message만 작성되어 있으면 메시지만 저장
               await updateStatusMessage(_statusMessageController.text);
+              _showSnackBar('상태 메시지가 수정되었습니다.');
               Navigator.of(context).pop();
             } else if (_imageFile != null &&
                 _statusMessageController.text.isEmpty) {
               // Image만 Null이 아니면 이미지만 저장
               await uploadProfileImage(_imageFile!);
+              _showSnackBar('프로필 이미지가 수정되었습니다.');
               Navigator.of(context).pop();
             } else {
               // 둘 다 저장
               await uploadProfileData(
                   _imageFile, _statusMessageController.text);
 
+              _showSnackBar('프로필이 수정되었습니다.');
               Navigator.of(context).pop();
             }
           },
