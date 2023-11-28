@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,14 +24,30 @@ class RecontentsFeedGenerator extends StatefulWidget {
   RecontentsFeedGeneratorState createState() => RecontentsFeedGeneratorState();
 }
 
+// Feed 생성할 때 리컨텐츠 Id => 원본 피드 Id 넣어주는 작업
 class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
   late TextEditingController _contentController = TextEditingController();
   late TextEditingController _tagController = TextEditingController();
+
+  Dio dio = Dio();
 
   @override
   void initState() {
     super.initState();
     print('Feed Data: ${widget.feedData}');
+    logger.d(widget.feedData.feedId);
+
+    // 추가: httpClientAdapter 설정
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.findProxy = (uri) {
+        // No proxy, so we return null.
+        return "DIRECT";
+      };
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+    };
+
     if (widget.feedData != null) {
       print('Feed Image URLs: ${widget.feedData.image}');
       // 이미지 URL을 문자열로 변환하여 _files 리스트에 추가
@@ -79,47 +99,62 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
   List<Widget> selectedImageList() {
     List<Widget> imageWidgets = [];
 
-    for (String imageUrl in _files) {
-      imageWidgets.add(
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: MediaQuery.of(context).size.width - 50,
-                ),
+    for (String imagePath in _files) {
+      Widget imageWidget;
+
+      if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+        // 원격 이미지인 경우
+        imageWidget = Image.network(
+          imagePath,
+          fit: BoxFit.cover,
+          height: 200,
+          width: MediaQuery.of(context).size.width - 50,
+        );
+      } else {
+        // 로컬 파일인 경우
+        imageWidget = Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Image.file(
+                File(imagePath),
+                fit: BoxFit.cover,
+                height: 200,
+                width: MediaQuery.of(context).size.width - 50,
               ),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      _files.remove(imageUrl);
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    height: 30,
-                    width: 30,
-                    child: Icon(
-                      color: Colors.black.withOpacity(0.6),
-                      size: 30,
-                      Icons.highlight_remove_outlined,
-                    ),
+            ),
+            Positioned(
+              top: 10,
+              right: 10,
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _files.remove(imagePath);
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(60),
+                  ),
+                  height: 30,
+                  width: 30,
+                  child: Icon(
+                    color: Colors.black.withOpacity(0.6),
+                    size: 30,
+                    Icons.highlight_remove_outlined,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
+        );
+      }
+
+      imageWidgets.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: imageWidget,
         ),
       );
     }
@@ -157,6 +192,7 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
     String contentText,
     List<String> imagePaths,
     String tagText,
+    String? reContentId,
   ) async {
     try {
       User? user = _auth.currentUser;
@@ -180,26 +216,39 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
           List<String> imageUrls = [];
 
           for (String imagePath in imagePaths) {
-            // 파일 이름을 UUID로 생성하고 확장자를 .jpg로 설정
-            String fileName = Uuid().v4() + '.jpg';
+            // 이미지의 URL이라면 Image.network를 사용하여 Uint8List로 변환
+            if (imagePath.startsWith('http')) {
+              var response = await dio.get(
+                imagePath,
+                options: Options(responseType: ResponseType.bytes),
+              );
+              var byteData = Uint8List.fromList(response.data);
 
-            Reference firebaseStorageRef =
-                FirebaseStorage.instance.ref().child(fileName);
+              Reference firebaseStorageRef = FirebaseStorage.instance.ref().child(Uuid().v4() + '.jpg');
 
-            // 파일의 MIME 타입을 명시적으로 지정
-            String mimeType = 'image/jpeg';
-            SettableMetadata metadata = SettableMetadata(contentType: mimeType);
+              // 이미지를 Firebase Storage에 업로드
+              UploadTask uploadTask = firebaseStorageRef.putData(byteData); // putData로 변경
 
-            // 이미지를 Firebase Storage에 업로드
-            UploadTask uploadTask =
-                firebaseStorageRef.putFile(io.File(imagePath), metadata);
+              TaskSnapshot taskSnapshot = await uploadTask;
+              logger.d('Image uploaded to Firebase Storage: ${taskSnapshot.ref}');
 
-            TaskSnapshot taskSnapshot = await uploadTask;
-            logger.d('Image uploaded to Firebase Storage: ${taskSnapshot.ref}');
-
-            // Firebase Storage에 업로드된 이미지의 다운로드 URL을 가져옴
-            String imageUrl = await taskSnapshot.ref.getDownloadURL();
-            imageUrls.add(imageUrl);
+              // Firebase Storage에 업로드된 이미지의 다운로드 URL을 가져옴
+              String imageUrl = await taskSnapshot.ref.getDownloadURL();
+              imageUrls.add(imageUrl);
+            } else {
+              // 이미지가 로컬 파일이라면 기존 코드 사용
+              String fileName = Uuid().v4() + '.jpg';
+              Reference firebaseStorageRef =
+              FirebaseStorage.instance.ref().child(fileName);
+              String mimeType = 'image/jpeg';
+              SettableMetadata metadata = SettableMetadata(contentType: mimeType);
+              UploadTask uploadTask =
+              firebaseStorageRef.putFile(io.File(imagePath), metadata);
+              TaskSnapshot taskSnapshot = await uploadTask;
+              logger.d('Image uploaded to Firebase Storage: ${taskSnapshot.ref}');
+              String imageUrl = await taskSnapshot.ref.getDownloadURL();
+              imageUrls.add(imageUrl);
+            }
           }
 
           // Firestore에 피드 추가
@@ -208,7 +257,7 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
             'makeTime': DateTime.now(),
             'content_text': contentText,
             'userId': user.uid,
-            'reContentId': null,
+            'reContentId': reContentId ?? null,
             'image': imageUrls.isNotEmpty ? imageUrls : [],
             'tag': tags,
             'userName': userName,
@@ -383,6 +432,7 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
                         _contentController.text,
                         _files,
                         _tagController.text,
+                        widget.feedData != null ? widget.feedData.feedId : null,
                       ); // 이미지 파일의 경로를 사용
 
                       // Feed 등록 후 이전 화면으로 돌아가기
