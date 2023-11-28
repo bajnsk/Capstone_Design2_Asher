@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 import '../../DataVO/model.dart';
 import '../../main.dart';
 import '../FeedPage/c_FeedPageController.dart';
 import 'c_DetailPageController.dart';
+import 'package:capstone/DB/Recontents_Feed_Generator/v_Recontents_feed_generator.dart';
 
 class DetailPageWidget extends StatefulWidget {
   final FeedDataVO feedData;
@@ -222,8 +224,13 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                   Spacer(),
                   InkWell(
                     onTap: () {
-                      logger.d(feedData);
                       // Add the action for the repeat icon
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                RecontentsFeedGenerator(feedData: feedData)),
+                      );
                     },
                     child: Padding(
                       padding: EdgeInsets.all(3.0),

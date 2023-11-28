@@ -8,16 +8,47 @@ import '../../DataVO/model.dart';
 import '../../main.dart';
 import 'dart:io' as io;
 
-class FeedGenerator extends StatefulWidget {
-  const FeedGenerator({super.key});
+class RecontentsFeedGenerator extends StatefulWidget {
+  final feedData;
+
+  const RecontentsFeedGenerator({
+    Key? key,
+    required this.feedData,
+  }) : super(key: key);
 
   @override
-  _FeedGeneratorState createState() => _FeedGeneratorState();
+  RecontentsFeedGeneratorState createState() => RecontentsFeedGeneratorState();
 }
 
-class _FeedGeneratorState extends State<FeedGenerator> {
-  final TextEditingController _contentController = TextEditingController();
-  final TextEditingController _tagController = TextEditingController();
+class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
+  late TextEditingController _contentController = TextEditingController();
+  late TextEditingController _tagController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    print('Feed Data: ${widget.feedData}');
+    if (widget.feedData != null) {
+      print('Feed Image URLs: ${widget.feedData.image}');
+      // 이미지 URL을 문자열로 변환하여 _files 리스트에 추가
+      _files.addAll((widget.feedData.image as List<dynamic>)
+          .map((imageUrl) => imageUrl.toString()));
+    } else {
+      print('Feed Data is null.');
+    }
+
+    _contentController = TextEditingController(
+        text: widget.feedData != null
+            ? widget.feedData.context_text.toString()
+            : '');
+    _tagController = TextEditingController(
+        text: widget.feedData != null ? widget.feedData.tag.toString() : '');
+    if (_tagController.text.isNotEmpty) {
+      _tagController.text =
+          _tagController.text.substring(1, _tagController.text.length - 1);
+    }
+  }
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isUploading = false;
   final List<String> _files = [];
@@ -36,46 +67,79 @@ class _FeedGeneratorState extends State<FeedGenerator> {
 
   // 이미지를 표시하는 함수
   List<Widget> selectedImageList() {
-    return _files.map((data) {
-      return Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: Stack(children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: Image.file(
-              io.File(data),
-              fit: BoxFit.cover,
-              height: 200,
-              width: MediaQuery.of(context).size.width - 50,
-            ),
-          ),
-          Positioned(
-            top: 10,
-            right: 10,
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  _files.remove(data);
-                });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(60),
-                ),
-                height: 30,
-                width: 30,
-                child: Icon(
-                  color: Colors.black.withOpacity(0.6),
-                  size: 30,
-                  Icons.highlight_remove_outlined,
+    List<Widget> imageWidgets = [];
+
+    for (String imageUrl in _files) {
+      imageWidgets.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  height: 200,
+                  width: MediaQuery.of(context).size.width - 50,
                 ),
               ),
-            ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _files.remove(imageUrl);
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.4),
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    height: 30,
+                    width: 30,
+                    child: Icon(
+                      color: Colors.black.withOpacity(0.6),
+                      size: 30,
+                      Icons.highlight_remove_outlined,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ]),
+        ),
       );
-    }).toList();
+    }
+
+    // Add the 'Add Photo' option
+    imageWidgets.add(
+      InkWell(
+        onTap: () async {
+          final images = await selectImages();
+          setState(() {
+            _files.addAll(
+                images.where((imagePath) => !_files.contains(imagePath)));
+          });
+        },
+        child: Container(
+          height: 200,
+          width: 200,
+          decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Icon(
+            Icons.add_a_photo_outlined,
+            size: 50,
+          ),
+        ),
+      ),
+    );
+
+    return imageWidgets;
   }
 
   // 데이터를 Firestore에 추가하는 함수
