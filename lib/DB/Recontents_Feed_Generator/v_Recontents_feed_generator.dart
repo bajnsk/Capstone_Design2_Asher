@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -36,17 +35,6 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
     super.initState();
     print('Feed Data: ${widget.feedData}');
     logger.d(widget.feedData.feedId);
-
-    // 추가: httpClientAdapter 설정
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-        (HttpClient client) {
-      client.findProxy = (uri) {
-        // No proxy, so we return null.
-        return "DIRECT";
-      };
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-    };
 
     if (widget.feedData != null) {
       print('Feed Image URLs: ${widget.feedData.image}');
