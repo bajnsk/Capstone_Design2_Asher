@@ -224,13 +224,16 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
               );
               var byteData = Uint8List.fromList(response.data);
 
-              Reference firebaseStorageRef = FirebaseStorage.instance.ref().child(Uuid().v4() + '.jpg');
+              Reference firebaseStorageRef =
+                  FirebaseStorage.instance.ref().child(Uuid().v4() + '.jpg');
 
               // 이미지를 Firebase Storage에 업로드
-              UploadTask uploadTask = firebaseStorageRef.putData(byteData); // putData로 변경
+              UploadTask uploadTask =
+                  firebaseStorageRef.putData(byteData); // putData로 변경
 
               TaskSnapshot taskSnapshot = await uploadTask;
-              logger.d('Image uploaded to Firebase Storage: ${taskSnapshot.ref}');
+              logger
+                  .d('Image uploaded to Firebase Storage: ${taskSnapshot.ref}');
 
               // Firebase Storage에 업로드된 이미지의 다운로드 URL을 가져옴
               String imageUrl = await taskSnapshot.ref.getDownloadURL();
@@ -239,13 +242,15 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
               // 이미지가 로컬 파일이라면 기존 코드 사용
               String fileName = Uuid().v4() + '.jpg';
               Reference firebaseStorageRef =
-              FirebaseStorage.instance.ref().child(fileName);
+                  FirebaseStorage.instance.ref().child(fileName);
               String mimeType = 'image/jpeg';
-              SettableMetadata metadata = SettableMetadata(contentType: mimeType);
+              SettableMetadata metadata =
+                  SettableMetadata(contentType: mimeType);
               UploadTask uploadTask =
-              firebaseStorageRef.putFile(io.File(imagePath), metadata);
+                  firebaseStorageRef.putFile(io.File(imagePath), metadata);
               TaskSnapshot taskSnapshot = await uploadTask;
-              logger.d('Image uploaded to Firebase Storage: ${taskSnapshot.ref}');
+              logger
+                  .d('Image uploaded to Firebase Storage: ${taskSnapshot.ref}');
               String imageUrl = await taskSnapshot.ref.getDownloadURL();
               imageUrls.add(imageUrl);
             }
@@ -270,6 +275,7 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
           // feedid에 생성된 feedid 저장
           await docRef.update({'feedId': feedId});
 
+          DataVO().init();
           // 현재 사용자를 위한 'users' 컬렉션의 'feedIds' 배열 필드 업데이트
           await _firestore.collection('users').doc(user.uid).update({
             'feedIds': FieldValue.arrayUnion([feedId]),

@@ -31,6 +31,7 @@ class FriendController {
         });
 
         DataVO.myUserData.friend.add(friendUid);
+        DataVO();
 
         logger.d('친구가 성공적으로 추가되었습니다.');
       } else {
@@ -63,7 +64,7 @@ class FriendController {
         await _firestore.collection('users').doc(friendUid).update({
           'friends': FieldValue.arrayRemove([currentUserUid]),
         });
-
+        DataVO().init();
         logger.d('친구가 성공적으로 삭제되었습니다.');
       } else {
         logger.d('유효하지 않은 친구 UID: $friendid');

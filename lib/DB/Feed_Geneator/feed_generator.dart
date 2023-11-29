@@ -147,6 +147,8 @@ class _FeedGeneratorState extends State<FeedGenerator> {
           // feedid에 생성된 feedid 저장
           await docRef.update({'feedId': feedId});
 
+          DataVO().init();
+
           // 현재 사용자를 위한 'users' 컬렉션의 'feedIds' 배열 필드 업데이트
           await _firestore.collection('users').doc(user.uid).update({
             'feedIds': FieldValue.arrayUnion([feedId]),
