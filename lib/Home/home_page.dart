@@ -2,7 +2,7 @@ import 'package:capstone/Appbar/v_appbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'MyPage/v_MyPage.dart';
-import 'TagPage/tag_page.dart';
+import 'TagPage/v_TagPageWidget.dart';
 import 'FeedPage/v_FeedPage.dart';
 
 class MyApp extends StatelessWidget {
