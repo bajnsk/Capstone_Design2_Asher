@@ -27,6 +27,7 @@ class RecontentsFeedGenerator extends StatefulWidget {
 class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
   late TextEditingController _contentController = TextEditingController();
   late TextEditingController _tagController = TextEditingController();
+  bool _isFeedPublic = true; // Track feed visibility
 
   Dio dio = Dio();
 
@@ -181,6 +182,7 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
     List<String> imagePaths,
     String tagText,
     String? reContentId,
+    bool isPublic,
   ) async {
     try {
       User? user = _auth.currentUser;
@@ -255,6 +257,7 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
             'tag': tags,
             'userName': userName,
             'userProfile': UserProfile,
+            'public': isPublic, // Store the feed visibility status
           });
 
           String feedId = docRef.id;
@@ -330,6 +333,24 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
                       Spacer(), // 여기에 Spacer 추가
                     ],
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 20),
+                    Container(
+                      width: 45, // Set the desired width
+                      child: Text('Public?', style: TextStyle(fontSize: 12)),
+                    ),
+                    Switch(
+                      value: _isFeedPublic,
+                      onChanged: (value) {
+                        setState(() {
+                          _isFeedPublic = value;
+                        });
+                      },
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -427,6 +448,7 @@ class RecontentsFeedGeneratorState extends State<RecontentsFeedGenerator> {
                         _files,
                         _tagController.text,
                         widget.feedData != null ? widget.feedData.feedId : null,
+                        _isFeedPublic,
                       ); // 이미지 파일의 경로를 사용
 
                       // Feed 등록 후 이전 화면으로 돌아가기

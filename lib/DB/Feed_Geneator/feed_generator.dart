@@ -21,6 +21,7 @@ class _FeedGeneratorState extends State<FeedGenerator> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isUploading = false;
   final List<String> _files = [];
+  bool _isFeedPublic = true; // Track feed visibility
 
   // Firestore 인스턴스 생성
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -80,10 +81,11 @@ class _FeedGeneratorState extends State<FeedGenerator> {
 
   // 데이터를 Firestore에 추가하는 함수
   Future<void> _addFeedToFirestore(
-    String contentText,
-    List<String> imagePaths,
-    String tagText,
-  ) async {
+      String contentText,
+      List<String> imagePaths,
+      String tagText,
+      bool isPublic // Add isPublic parameter with a default value
+      ) async {
     try {
       User? user = _auth.currentUser;
 
@@ -139,6 +141,7 @@ class _FeedGeneratorState extends State<FeedGenerator> {
             'tag': tags,
             'userName': userName,
             'userProfile': UserProfile,
+            'public': isPublic, // Store the feed visibility status
           });
 
           String feedId = docRef.id;
@@ -164,6 +167,8 @@ class _FeedGeneratorState extends State<FeedGenerator> {
     }
   }
 
+  // ...
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -183,9 +188,6 @@ class _FeedGeneratorState extends State<FeedGenerator> {
           child: Center(
             child: Column(
               children: [
-                SizedBox(
-                  height: 20,
-                ),
                 Container(
                   height: 50,
                   width: MediaQuery.of(context).size.width,
@@ -215,6 +217,24 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                       Spacer(), // 여기에 Spacer 추가
                     ],
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 20),
+                    Container(
+                      width: 45, // Set the desired width
+                      child: Text('Public?', style: TextStyle(fontSize: 12)),
+                    ),
+                    Switch(
+                      value: _isFeedPublic,
+                      onChanged: (value) {
+                        setState(() {
+                          _isFeedPublic = value;
+                        });
+                      },
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -282,7 +302,6 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                             borderSide: BorderSide(color: Colors.black))),
                   ),
                 ),
-                //),
                 SizedBox(
                   height: 20,
                 ),
@@ -311,6 +330,7 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                         _contentController.text,
                         _files,
                         _tagController.text,
+                        _isFeedPublic, // Pass the visibility status
                       ); // 이미지 파일의 경로를 사용
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Feed를 등록했습니다.')),

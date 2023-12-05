@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import '../../DataVO/model.dart';
 import '../../main.dart';
 import 'dart:io' as io;
 
@@ -44,8 +45,8 @@ class _FeedGeneratorState extends State<FeedGenerator> {
             child: Image.file(
               io.File(data),
               fit: BoxFit.cover,
-              height: MediaQuery.of(context).size.height * 0.4,
-              width: 200,
+              height: 200,
+              width: MediaQuery.of(context).size.width - 50,
             ),
           ),
           Positioned(
@@ -146,6 +147,8 @@ class _FeedGeneratorState extends State<FeedGenerator> {
           // feedid에 생성된 feedid 저장
           await docRef.update({'feedId': feedId});
 
+          DataVO().init();
+
           // 현재 사용자를 위한 'users' 컬렉션의 'feedIds' 배열 필드 업데이트
           await _firestore.collection('users').doc(user.uid).update({
             'feedIds': FieldValue.arrayUnion([feedId]),
@@ -165,6 +168,7 @@ class _FeedGeneratorState extends State<FeedGenerator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('새 피드 작성'),
         backgroundColor: Colors.grey[300],
         elevation: 0,
         leading: IconButton(
@@ -182,34 +186,73 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                 SizedBox(
                   height: 20,
                 ),
-                // 업로드 아이콘 누를 시 이미지 선택
+                Container(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey,
+                        width: 0.7,
+                      ),
+                      top: BorderSide(
+                        color: Colors.grey,
+                        width: 0.7,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 15,
+                        backgroundImage: NetworkImage(
+                          DataVO.myUserData.userProfile,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text(DataVO.myUserData.userName),
+                      Spacer(), // 여기에 Spacer 추가
+                    ],
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 15,
                     horizontal: 15,
                   ),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
+                  child: Container(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width - 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: PageView(
+                      scrollDirection: Axis.horizontal,
                       children: [
-                        InkWell(
-                          onTap: () async {
-                            final images = await selectImages();
-                            setState(() {
-                              _files.addAll(images.where(
-                                  (imagePath) => !_files.contains(imagePath)));
-                            });
-                          },
-                          child: Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(5),
+                        if (_files.isEmpty)
+                          InkWell(
+                            onTap: () async {
+                              final images = await selectImages();
+                              setState(() {
+                                _files.addAll(images.where((imagePath) =>
+                                    !_files.contains(imagePath)));
+                              });
+                            },
+                            child: Container(
+                              height: 200,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Icon(
+                                Icons.add_a_photo_outlined,
+                                size: 50,
+                              ),
                             ),
-                            child: Icon(Icons.upload),
                           ),
-                        ),
                         ...selectedImageList(),
                       ],
                     ),
@@ -228,62 +271,35 @@ class _FeedGeneratorState extends State<FeedGenerator> {
                   height: 10,
                 ),
                 Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 2),
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 0,
-                          blurRadius: 5,
-                          offset: Offset(0, 7),
-                        )
-                      ]),
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  height: 150,
                   width: MediaQuery.of(context).size.width - 50,
                   child: TextFormField(
                     controller: _contentController,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: InputDecoration(
-                      hintText: '내용을 입력하세요.',
-                      border: InputBorder.none,
-                    ),
+                        hintText: '내용을 입력하세요.',
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black))),
                   ),
                 ),
+                //),
                 SizedBox(
                   height: 20,
                 ),
                 Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 2),
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 0,
-                          blurRadius: 5,
-                          offset: Offset(0, 5),
-                        )
-                      ]),
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  height: 50,
                   width: MediaQuery.of(context).size.width - 50,
                   child: TextFormField(
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     controller: _tagController,
                     decoration: InputDecoration(
-                      hintText: '태그를 입력하세요.',
-                      border: InputBorder.none,
-                    ),
+                        hintText: '태그를 입력하세요.',
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black))),
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 ElevatedButton(
                   onPressed: () async {

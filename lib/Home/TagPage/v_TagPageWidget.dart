@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,13 +9,12 @@ class TagPageWidget extends StatefulWidget {
   @override
   State<TagPageWidget> createState() => TagPageWidgetState();
 }
+
 class TagPageWidgetState extends State<TagPageWidget> {
   List<String> contentTitles = [];
   List<String> contentDescriptions = [];
   List<String> contentTimes = [];
   List<String> contentSources = [];
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -84,18 +81,17 @@ class TagPageWidgetState extends State<TagPageWidget> {
             ),
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => TagDetailPageWidget(),
                     ),
-                  );// 수행할 작업 추가
+                  ); // 수행할 작업 추가
                 },
                 child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black)
-                  ),
+                  decoration:
+                      BoxDecoration(border: Border.all(color: Colors.black)),
                   height: MediaQuery.of(context).size.width / 2,
                   child: Column(
                     children: [
@@ -124,4 +120,3 @@ class TagPageWidgetState extends State<TagPageWidget> {
     );
   }
 }
-
