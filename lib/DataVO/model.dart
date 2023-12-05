@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../main.dart';
+
 // 파베로 부터 받아온 데이터를 리스트 형태로 저장시켜놓는 공간
 
 // 유저 데이터에 대한 모델링 > 리스트
@@ -37,7 +39,7 @@ class UserDataVO {
 class FeedDataVO {
   @override
   String toString() {
-    return 'FeedDataVO{feedId: $feedId, userId: $userId, reContentId: $reContentId, context_text: $context_text, image: $image, makeTime: $makeTime, tag: $tag, userName: $userName, userProfile: $userProfile}';
+    return 'FeedDataVO{feedId: $feedId, userId: $userId, reContentId: $reContentId, context_text: $context_text, image: $image, makeTime: $makeTime, tag: $tag, userName: $userName, userProfile: $userProfile, public: $public}';
   }
 
   var feedId;
@@ -49,6 +51,7 @@ class FeedDataVO {
   var tag;
   var userName;
   var userProfile;
+  var public;
 
   FeedDataVO({
     required this.feedId,
@@ -60,6 +63,7 @@ class FeedDataVO {
     required this.tag,
     required this.userName,
     required this.userProfile,
+    required this.public,
   });
 }
 
@@ -131,6 +135,7 @@ class DataVO {
           tag: doc['tag'],
           userName: doc['userName'],
           userProfile: doc['userProfile'],
+          public: doc['public'],
         );
       }).toList();
       print('피드 데이터 성공적으로 가져옴.');
@@ -147,6 +152,7 @@ class DataVO {
       print("여기다! 여기!");
       print(myUserData.followedFeed);
       await fetchFeedData();
+      logger.d(feedData);
       //updateLikeFeedData();
     } catch (e) {
       // 에러 처리

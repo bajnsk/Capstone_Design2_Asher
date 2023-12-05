@@ -54,6 +54,7 @@ class _RecontentsDetailPageWidgetState
         tag: [],
         userName: 'null',
         userProfile: 'null',
+        public: 'null',
       ),
     );
 
@@ -70,6 +71,7 @@ class _RecontentsDetailPageWidgetState
         tag: [],
         userName: 'null',
         userProfile: 'null',
+        public: 'null',
       ),
     );
 
