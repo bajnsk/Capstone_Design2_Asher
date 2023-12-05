@@ -92,23 +92,26 @@ class TagPageWidgetState extends State<TagPageWidget> {
                   );
                 },
                 child: Container(
-                  decoration:
-                      BoxDecoration(border: Border.all(color: Colors.black)),
                   height: MediaQuery.of(context).size.width / 2,
                   child: Column(
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width / 2,
-                        height: 120,
-                        child: Image.network(tagFeedList[index].image[0]),
+                        height: 130,
+                        child: Image.network(
+                          tagFeedList[index].image[0],
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width / 2,
-                        height: 55,
+                        height: 45,
+                        padding: EdgeInsets.only(left: 10,right: 10,top: 3),
                         child: Text(tagFeedList[index].context_text),
                       ),
                       Container(
                           width: MediaQuery.of(context).size.width / 2,
+                          padding: EdgeInsets.only(left: 10,right: 10),
                           child: Row(children: [
                             for (String tag in tagFeedList[index].tag)
                               Text(tag),
