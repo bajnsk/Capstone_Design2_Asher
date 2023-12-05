@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../DataVO/model.dart';
 import '../DetailPage/v_TagDetailPageWidget.dart';
 
 class TagPageWidget extends StatefulWidget {
@@ -12,7 +11,10 @@ class TagPageWidget extends StatefulWidget {
 }
 
 class TagPageWidgetState extends State<TagPageWidget> {
-  List<FeedDataVO> tagFeedList = DataVO.feedData; // Use feedData directly
+  List<String> contentTitles = [];
+  List<String> contentDescriptions = [];
+  List<String> contentTimes = [];
+  List<String> contentSources = [];
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +72,7 @@ class TagPageWidgetState extends State<TagPageWidget> {
         ),
         Expanded(
           child: GridView.builder(
-            itemCount: tagFeedList.length, // Use tagFeedList.length
+            itemCount: 10,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 1,
@@ -78,18 +80,14 @@ class TagPageWidgetState extends State<TagPageWidget> {
               crossAxisSpacing: 1,
             ),
             itemBuilder: (BuildContext context, int index) {
-              FeedDataVO feed =
-                  tagFeedList[index]; // Get feed at the current index
-
               return InkWell(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          TagDetailPageWidget(feedData: tagFeedList[index]),
+                      builder: (context) => TagDetailPageWidget(),
                     ),
-                  );
+                  ); // 수행할 작업 추가
                 },
                 child: Container(
                   decoration:
@@ -100,19 +98,17 @@ class TagPageWidgetState extends State<TagPageWidget> {
                       Container(
                         width: MediaQuery.of(context).size.width / 2,
                         height: 120,
-                        child: Image.network(tagFeedList[index].image[0]),
+                        child: Text('image'),
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width / 2,
                         height: 55,
-                        child: Text(tagFeedList[index].context_text),
+                        child: Text('본문 텍스트'),
                       ),
                       Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: Row(children: [
-                            for (String tag in tagFeedList[index].tag)
-                              Text(tag),
-                          ]))
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: Text('태그'),
+                      )
                     ],
                   ),
                 ),
