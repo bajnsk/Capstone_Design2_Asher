@@ -16,6 +16,7 @@ class TagDetailPageWidget extends StatefulWidget {
 
 class _TagDetailPageWidgetState extends State<TagDetailPageWidget> {
   int currentPageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     FeedDataVO feedData = widget.feedData;
@@ -99,6 +100,10 @@ class _TagDetailPageWidgetState extends State<TagDetailPageWidget> {
               child: Text(
                 widget
                     .feedData.context_text, // TODO: FeedDataVO에서 본문 텍스트 가져와서 표시
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                    fontSize: 17),
               ),
             ),
             // 태그 컨테이너
@@ -110,7 +115,16 @@ class _TagDetailPageWidgetState extends State<TagDetailPageWidget> {
                   for (String tag in widget.feedData.tag)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(tag),
+                      child: TextButton(
+                        onPressed: () {
+                          // Add the action for each tag
+                        },
+                        child: Text(
+                          tag,
+                          style:
+                              TextStyle(color: Colors.blueAccent, fontSize: 17),
+                        ),
+                      ),
                     ),
                 ],
               ),

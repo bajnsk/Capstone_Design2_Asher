@@ -60,7 +60,8 @@ class TagPageWidgetState extends State<TagPageWidget> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding:
+              const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
           child: Container(
             color: Colors.grey,
             width: MediaQuery.of(context).size.width,
@@ -92,29 +93,43 @@ class TagPageWidgetState extends State<TagPageWidget> {
                   );
                 },
                 child: Container(
+                  padding: EdgeInsets.only(left: 10, right: 10),
                   height: MediaQuery.of(context).size.width / 2,
                   child: Column(
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width / 2,
-                        height: 130,
-                        child: Image.network(
-                          tagFeedList[index].image[0],
-                          fit: BoxFit.cover,
+                        height: 150,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.network(
+                            tagFeedList[index].image[0],
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width / 2,
-                        height: 45,
-                        padding: EdgeInsets.only(left: 10,right: 10,top: 3),
-                        child: Text(tagFeedList[index].context_text),
+                        width: MediaQuery.of(context).size.width / 2 - 20,
+                        padding: EdgeInsets.only(left: 10, right: 10, top: 3),
+                        child: Text(
+                          tagFeedList[index].context_text,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.grey),
+                        ),
                       ),
                       Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          padding: EdgeInsets.only(left: 10,right: 10),
+                          width: MediaQuery.of(context).size.width / 2 - 20,
+                          padding: EdgeInsets.only(left: 10, right: 10),
                           child: Row(children: [
                             for (String tag in tagFeedList[index].tag)
-                              Text(tag),
+                              Text(
+                                tag,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: Colors.blueAccent),
+                              ),
                           ]))
                     ],
                   ),
