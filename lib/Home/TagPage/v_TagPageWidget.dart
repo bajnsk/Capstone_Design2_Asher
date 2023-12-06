@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../DataVO/model.dart';
-import '../DetailPage/v_TagDetailPageWidget.dart';
+import 'package:capstone/DataVO/model.dart';
+import 'package:capstone/Home/DetailPage/v_TagDetailPageWidget.dart';
+import 'package:get/get.dart';
 
 class TagPageWidget extends StatefulWidget {
   TagPageWidget({Key? key}) : super(key: key);
@@ -12,10 +12,24 @@ class TagPageWidget extends StatefulWidget {
 }
 
 class TagPageWidgetState extends State<TagPageWidget> {
-  List<FeedDataVO> tagFeedList = DataVO.feedData; // Use feedData directly
+  List<FeedDataVO> allTagFeedList = DataVO.feedData; // All feed data
+  List<FeedDataVO> displayedTagFeedList = DataVO.feedData;
+
+  // Controller for managing selected tags
+  late TagController tagController;
+
+  @override
+  void initState() {
+    super.initState();
+    tagController = Get.put(TagController());
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (!Get.isRegistered<TagController>()) {
+      Get.put(TagController());
+    }
+
     return Column(
       children: [
         Padding(
@@ -30,48 +44,68 @@ class TagPageWidgetState extends State<TagPageWidget> {
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Container(
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '검색할 태그를 입력하시오.',
-                        hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20, right: 8),
+                          child: TextFormField(
+                            controller: tagController.tagInputController,
+                            onChanged: (value) {
+                              setState(() {
+                                displayedTagFeedList = allTagFeedList
+                                    .where((feed) => feed.tag.contains(value))
+                                    .toList();
+                              });
+                            },
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: '구독할 태그를 추가하세요',
+                              hintStyle:
+                                  TextStyle(color: Colors.grey, fontSize: 16),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  top: 0,
-                  right: 0,
-                  child: IconButton(
-                    onPressed: () {
-                      //수행할 작업 추가
-                    },
-                    icon: Icon(
-                      CupertinoIcons.search,
-                      color: Colors.grey,
-                    ),
+                      IconButton(
+                        onPressed: () {
+                          tagController.addTag();
+                        },
+                        icon: Icon(
+                          CupertinoIcons.plus,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
         ),
+
+        // 추가: 검색창 아래에 추가된 태그 표시
         Padding(
-          padding:
-              const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-          child: Container(
-            color: Colors.grey,
-            width: MediaQuery.of(context).size.width,
-            height: 100,
-            child: Text('태그 구독? 추천? 임시 컨테이너'),
+          padding: const EdgeInsets.all(8.0),
+          child: Obx(
+            () => Wrap(
+              spacing: 8.0,
+              children: [
+                for (String tag in tagController.getSelectedTags)
+                  Chip(
+                    label: Text(tag),
+                    onDeleted: () {
+                      tagController.removeTag(tag);
+                    },
+                  ),
+              ],
+            ),
           ),
         ),
+
         Expanded(
           child: GridView.builder(
-            itemCount: tagFeedList.length, // Use tagFeedList.length
+            itemCount: displayedTagFeedList.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 1,
@@ -79,16 +113,16 @@ class TagPageWidgetState extends State<TagPageWidget> {
               crossAxisSpacing: 1,
             ),
             itemBuilder: (BuildContext context, int index) {
-              FeedDataVO feed =
-                  tagFeedList[index]; // Get feed at the current index
+              FeedDataVO feed = displayedTagFeedList[index];
 
               return InkWell(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          TagDetailPageWidget(feedData: tagFeedList[index]),
+                      builder: (context) => TagDetailPageWidget(
+                        feedData: displayedTagFeedList[index],
+                      ),
                     ),
                   );
                 },
@@ -103,7 +137,7 @@ class TagPageWidgetState extends State<TagPageWidget> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: Image.network(
-                            tagFeedList[index].image[0],
+                            displayedTagFeedList[index].image[0],
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -112,25 +146,30 @@ class TagPageWidgetState extends State<TagPageWidget> {
                         width: MediaQuery.of(context).size.width / 2 - 20,
                         padding: EdgeInsets.only(left: 10, right: 10, top: 3),
                         child: Text(
-                          tagFeedList[index].context_text,
+                          displayedTagFeedList[index].context_text,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.grey),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                       Container(
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: Row(children: [
-                            for (String tag in tagFeedList[index].tag)
+                        width: MediaQuery.of(context).size.width / 2 - 20,
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: Row(
+                          children: [
+                            for (String tag in displayedTagFeedList[index].tag)
                               Text(
                                 tag,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(color: Colors.blueAccent),
                               ),
-                          ]))
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -141,4 +180,24 @@ class TagPageWidgetState extends State<TagPageWidget> {
       ],
     );
   }
+}
+
+class TagController extends GetxController {
+  static RxList<String> selectedTags = <String>[].obs;
+  final tagInputController = TextEditingController();
+
+  void addTag() {
+    if (tagInputController.text.isNotEmpty) {
+      selectedTags.add(tagInputController.text);
+      // 입력 필드 초기화
+      tagInputController.clear();
+    }
+  }
+
+  void removeTag(String tag) {
+    selectedTags.remove(tag);
+  }
+
+  // 추가: selectedTags를 반환하는 getter 추가
+  List<String> get getSelectedTags => selectedTags.toList();
 }
