@@ -22,6 +22,19 @@ class TagPageWidgetState extends State<TagPageWidget> {
   void initState() {
     super.initState();
     tagController = Get.put(TagController());
+
+    // 페이지 이동 시 displayedFeed가 전체 피드로 보이는 문제 해결 위해
+    // 저장된 selectedTags를 이용해 displayedTagFeedList를 초기화 후 보여줌
+    if (tagController.getSelectedTags.isEmpty) {
+      // If no selected tags, show all feeds
+      displayedTagFeedList = List.from(allTagFeedList);
+    } else {
+      // If there are selected tags, filter feeds based on the tags
+      displayedTagFeedList = allTagFeedList
+          .where((feed) => feed.tag
+              .any((tag) => tagController.getSelectedTags.contains(tag)))
+          .toList();
+    }
   }
 
   @override
@@ -51,13 +64,7 @@ class TagPageWidgetState extends State<TagPageWidget> {
                           padding: EdgeInsets.only(left: 20, right: 8),
                           child: TextFormField(
                             controller: tagController.tagInputController,
-                            onChanged: (value) {
-                              setState(() {
-                                displayedTagFeedList = allTagFeedList
-                                    .where((feed) => feed.tag.contains(value))
-                                    .toList();
-                              });
-                            },
+                            onChanged: (value) {},
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: '구독할 태그를 추가하세요',
@@ -70,6 +77,14 @@ class TagPageWidgetState extends State<TagPageWidget> {
                       IconButton(
                         onPressed: () {
                           tagController.addTag();
+                          // 태그 추가에 따른 displayedTagFeedList 갱신
+                          setState(() {
+                            displayedTagFeedList = allTagFeedList
+                                .where((feed) => feed.tag.any((tag) =>
+                                    tagController.getSelectedTags
+                                        .contains(tag)))
+                                .toList();
+                          });
                         },
                         icon: Icon(
                           CupertinoIcons.plus,
@@ -94,8 +109,22 @@ class TagPageWidgetState extends State<TagPageWidget> {
                 for (String tag in tagController.getSelectedTags)
                   Chip(
                     label: Text(tag),
+                    // 태그 삭제 기능
                     onDeleted: () {
+                      // selectedTags 목록에서 선택된 태그 삭제
                       tagController.removeTag(tag);
+                      setState(() {
+                        // 삭제했는데 만약 selectedTags가 비어있으면 전체 피드 데이터가 보이게 수정
+                        if (tagController.getSelectedTags.isEmpty) {
+                          displayedTagFeedList = List.from(allTagFeedList);
+                        } else {
+                          // 아니면 필터링된 피드 리스트 보여주기
+                          displayedTagFeedList = allTagFeedList
+                              .where((feed) => feed.tag.any((tag) =>
+                                  tagController.getSelectedTags.contains(tag)))
+                              .toList();
+                        }
+                      });
                     },
                   ),
               ],
@@ -113,7 +142,7 @@ class TagPageWidgetState extends State<TagPageWidget> {
               crossAxisSpacing: 1,
             ),
             itemBuilder: (BuildContext context, int index) {
-              FeedDataVO feed = displayedTagFeedList[index];
+              // FeedDataVO feed = displayedTagFeedList[index];
 
               return InkWell(
                 onTap: () {
