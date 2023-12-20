@@ -102,6 +102,7 @@ class _MyPageEditProfilePopupState extends State<MyPageEditProfilePopup> {
               top: 15,
               child: CircleAvatar(
                 backgroundColor: Colors.grey,
+                backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
                 radius: 45,
               ),
             ),
